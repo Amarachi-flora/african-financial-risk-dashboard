@@ -38,9 +38,6 @@ import os
 from datetime import datetime
 import time
 
-
-import os
-
 # Create necessary directories if they don't exist
 os.makedirs("outputs", exist_ok=True)
 os.makedirs("models", exist_ok=True)
@@ -366,7 +363,7 @@ with st.sidebar:
                 if age_col:
                     st.metric("Avg Age", f"{df[age_col].mean():.1f}")
     except:
-        st.info("Load data in Dashboard page")
+        st.info("Run the pipeline first to generate data")
     
     st.markdown("---")
     
@@ -408,100 +405,151 @@ if selected_page == "🏠 Dashboard":
     # Show success balloon
     show_success_balloon("Welcome!")
     
-    # Metrics cards
-    col1, col2, col3, col4 = st.columns(4)
+    # Check if processed data exists from pipeline
+    processed_file = "outputs/processed_data.csv"
     
-    with col1:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-        st.metric("Total Customers", "5,200", "+12%")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-        st.metric("Avg Credit Score", "645", "+8")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-        st.metric("Digital Adoption", "68%", "+15%")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-        st.metric("Risk Rate", "12.5%", "-2.3%")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Load and display data
-    st.markdown("### 📁 Load Your Dataset")
-    
-    uploaded_file = st.file_uploader("Upload financial_data.csv", type=["csv"])
-    
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        st.markdown('<div class="success-badge">✅ Dataset Loaded Successfully!</div>', unsafe_allow_html=True)
-        st.success(f"Dataset loaded: {len(df):,} records × {len(df.columns)} columns")
+    if os.path.exists(processed_file):
+        try:
+            df = pd.read_csv(processed_file)
+            st.markdown('<div class="success-badge">✅ Processed Dataset Loaded from Pipeline!</div>', unsafe_allow_html=True)
+            st.success(f"Dataset loaded: {len(df):,} records × {len(df.columns)} columns")
+            
+            # Show preview
+            with st.expander("📋 Dataset Preview", expanded=True):
+                st.dataframe(df.head(100), use_container_width=True)
+            
+            # Basic statistics
+            st.markdown("### 📊 Dataset Statistics")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("#### Numerical Features")
+                numeric_cols = df.select_dtypes(include=[np.number]).columns
+                if len(numeric_cols) > 0:
+                    st.dataframe(df[numeric_cols].describe(), use_container_width=True)
+            
+            with col2:
+                st.markdown("#### Categorical Features")
+                cat_cols = df.select_dtypes(include=['object']).columns
+                for col in cat_cols[:5]:
+                    st.write(f"**{col}**: {df[col].nunique()} unique values")
+                    if df[col].nunique() < 10:
+                        value_counts = df[col].value_counts()
+                        fig = px.pie(values=value_counts.values, names=value_counts.index, 
+                                   title=col, color_discrete_sequence=px.colors.sequential.RdBu)
+                        st.plotly_chart(fig, use_container_width=True)
+            
+            # Metrics cards based on actual data
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                st.metric("Total Customers", f"{len(df):,}", "+12%")
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col2:
+                credit_col = get_column_case_insensitive(df, 'Credit_Score')
+                if credit_col:
+                    avg_credit = df[credit_col].mean()
+                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                    st.metric("Avg Credit Score", f"{avg_credit:.0f}", "+8")
+                    st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col3:
+                digital_col = get_column_case_insensitive(df, 'digital_adoption_score')
+                if digital_col:
+                    digital_adoption = (df[digital_col].mean() / 4) * 100
+                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                    st.metric("Digital Adoption", f"{digital_adoption:.1f}%", "+15%")
+                    st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col4:
+                risk_col = get_column_case_insensitive(df, 'risk_score')
+                if risk_col:
+                    high_risk = (df[risk_col] > 0.6).sum()
+                    risk_rate = (high_risk / len(df)) * 100
+                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                    st.metric("Risk Rate", f"{risk_rate:.1f}%", "-2.3%")
+                    st.markdown('</div>', unsafe_allow_html=True)
+            
+        except Exception as e:
+            st.error(f"Error loading processed data: {str(e)}")
+    else:
+        st.warning("🚨 No processed data found!")
+        st.markdown("""
+        **Please run the pipeline first:**
+        1. Run `master_pipeline.py` to process your data
+        2. This will create `outputs/processed_data.csv`
+        3. Refresh this page to load the processed data
         
-        # Save for other pages
-        df.to_csv("outputs/processed_data.csv", index=False)
+        The pipeline creates enhanced features needed for all visualizations:
+        - Risk scores
+        - Sentiment analysis
+        - Customer clusters
+        - Digital adoption metrics
+        """)
         
-        # Show preview
-        with st.expander("📋 Dataset Preview", expanded=True):
-            st.dataframe(df.head(100), use_container_width=True)
-        
-        # Basic statistics
-        st.markdown("### 📊 Dataset Statistics")
-        
-        col1, col2 = st.columns(2)
+        # Show static sample metrics
+        col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            st.markdown("#### Numerical Features")
-            numeric_cols = df.select_dtypes(include=[np.number]).columns
-            if len(numeric_cols) > 0:
-                st.dataframe(df[numeric_cols].describe(), use_container_width=True)
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("Total Customers", "5,200", "+12%")
+            st.markdown('</div>', unsafe_allow_html=True)
         
         with col2:
-            st.markdown("#### Categorical Features")
-            cat_cols = df.select_dtypes(include=['object']).columns
-            for col in cat_cols[:5]:
-                st.write(f"**{col}**: {df[col].nunique()} unique values")
-                if df[col].nunique() < 10:
-                    value_counts = df[col].value_counts()
-                    fig = px.pie(values=value_counts.values, names=value_counts.index, 
-                               title=col, color_discrete_sequence=px.colors.sequential.RdBu)
-                    st.plotly_chart(fig, use_container_width=True)
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("Avg Credit Score", "645", "+8")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("Digital Adoption", "68%", "+15%")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+            st.metric("Risk Rate", "12.5%", "-2.3%")
+            st.markdown('</div>', unsafe_allow_html=True)
     
-    # Sample charts (if no data loaded)
+    # Visualizations
     st.markdown("### 📈 Sample Visualizations")
     
-    # Create sample data for visualization if no data loaded
+    # Check if we have data loaded
     if 'df' not in locals() or df.empty:
-        # Generate sample data
-        np.random.seed(42)
-        sample_size = 1000
-        sample_data = pd.DataFrame({
-            'Credit_Score': np.random.normal(650, 100, sample_size).clip(300, 850),
-            'Monthly_Expenditure': np.random.lognormal(12, 0.8, sample_size).clip(20000, 500000),
-            'age': np.random.randint(22, 65, sample_size),
-            'Cluster': np.random.choice(['Digital-First', 'Traditional', 'High-Risk', 'Medium', 'Positive'], sample_size),
-            'Risk_Score': np.random.beta(2, 5, sample_size)
-        })
-        df = sample_data
+        # Load data if it exists
+        if os.path.exists(processed_file):
+            df = pd.read_csv(processed_file)
+        else:
+            # Generate sample data for visualization if no data loaded
+            np.random.seed(42)
+            sample_size = 1000
+            df = pd.DataFrame({
+                'Credit_Score': np.random.normal(650, 100, sample_size).clip(300, 850),
+                'Monthly_Expenditure': np.random.lognormal(12, 0.8, sample_size).clip(20000, 500000),
+                'age': np.random.randint(22, 65, sample_size),
+                'Cluster': np.random.choice(['Digital-First', 'Traditional', 'High-Risk', 'Medium', 'Positive'], sample_size),
+                'Risk_Score': np.random.beta(2, 5, sample_size)
+            })
     
     col1, col2 = st.columns(2)
     
     with col1:
         # Credit Score Distribution
-        fig = px.histogram(df, x='Credit_Score', nbins=30, title='Credit Score Distribution',
-                          color_discrete_sequence=['#636EFA'])
-        fig.update_layout(bargap=0.1, plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig, use_container_width=True)
+        credit_col = get_column_case_insensitive(df, 'Credit_Score')
+        if credit_col:
+            fig = px.histogram(df, x=credit_col, nbins=30, title='Credit Score Distribution',
+                              color_discrete_sequence=['#636EFA'])
+            fig.update_layout(bargap=0.1, plot_bgcolor='rgba(0,0,0,0)')
+            st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         # Expenditure vs Credit Score
         sample_df = df.sample(min(500, len(df)))
         
         # Get actual column names that exist
-        cluster_col = get_column_case_insensitive(sample_df, 'Cluster') or 'Cluster'
+        cluster_col = get_column_case_insensitive(sample_df, 'Cluster') or get_column_case_insensitive(sample_df, 'cluster_name') or 'Cluster'
         credit_col = get_column_case_insensitive(sample_df, 'Credit_Score') or 'Credit_Score'
         expend_col = get_column_case_insensitive(sample_df, 'Monthly_Expenditure') or 'Monthly_Expenditure'
         
@@ -521,7 +569,7 @@ if selected_page == "🏠 Dashboard":
         st.plotly_chart(fig, use_container_width=True)
     
     # Cluster distribution
-    cluster_col = get_column_case_insensitive(df, 'Cluster')
+    cluster_col = get_column_case_insensitive(df, 'cluster_name') or get_column_case_insensitive(df, 'Cluster') or get_column_case_insensitive(df, 'cluster')
     if cluster_col and cluster_col in df.columns:
         cluster_counts = df[cluster_col].value_counts().reset_index()
         cluster_counts.columns = ['Cluster', 'Count']
@@ -541,6 +589,7 @@ elif selected_page == "🔍 Customer Analysis":
     show_success_balloon("Analysis Ready!")
     
     try:
+        # Load processed data from pipeline
         df = pd.read_csv("outputs/processed_data.csv")
         
         # Standardize column names
@@ -614,7 +663,9 @@ elif selected_page == "🔍 Customer Analysis":
             'Credit_Score', 'credit_score',
             'Monthly_Expenditure', 'monthly_expenditure',
             'Location', 'location',
-            'Transaction_Channel', 'transaction_channel'
+            'Transaction_Channel', 'transaction_channel',
+            'cluster_name', 'Cluster', 'cluster',
+            'risk_score', 'sentiment_score', 'sentiment_label'
         ]
         
         for col in possible_cols:
@@ -696,8 +747,8 @@ elif selected_page == "🔍 Customer Analysis":
             st.plotly_chart(fig, use_container_width=True)
         
     except FileNotFoundError:
-        st.error("❌ No data found. Please load data in the Dashboard page first.")
-        st.info("Go to the Dashboard page and upload your dataset.")
+        st.error("❌ No processed data found. Please run the pipeline first.")
+        st.info("Run `master_pipeline.py` to generate processed_data.csv")
     except Exception as e:
         st.error(f"❌ Error loading data: {str(e)}")
 
@@ -818,14 +869,14 @@ elif selected_page == "📊 Clusters":
             if os.path.exists(df_path):
                 df = pd.read_csv(df_path)
                 
-                cluster_col = get_column_case_insensitive(df, 'cluster')
+                cluster_col = get_column_case_insensitive(df, 'cluster_name') or get_column_case_insensitive(df, 'cluster')
                 if cluster_col:
                     # Create summary
                     numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
                     if numeric_cols:
                         cluster_summary = df.groupby(cluster_col).agg({
                             numeric_cols[0]: 'count',
-                            **{col: 'mean' for col in numeric_cols[1:3]}
+                            **{col: 'mean' for col in numeric_cols[1:3] if col in df.columns}
                         }).reset_index()
                         
                         # Rename columns
@@ -847,7 +898,7 @@ elif selected_page == "📊 Clusters":
                 else:
                     st.warning("No cluster information found in data. Please run the clustering pipeline first.")
             else:
-                st.error("No data found. Please load data in the Dashboard page first.")
+                st.error("No data found. Please run the pipeline first.")
     
     except Exception as e:
         st.error(f"Error loading cluster data: {str(e)}")
@@ -1241,7 +1292,7 @@ elif selected_page == "📈 Insights":
             recommendations = []
             
             # Check for cluster data
-            cluster_col = get_column_case_insensitive(df, 'cluster')
+            cluster_col = get_column_case_insensitive(df, 'cluster_name') or get_column_case_insensitive(df, 'cluster')
             if cluster_col and cluster_col in df.columns:
                 cluster_counts = df[cluster_col].value_counts()
                 largest_cluster = cluster_counts.index[0]
@@ -1267,6 +1318,18 @@ elif selected_page == "📈 Insights":
             if location_col:
                 top_locations = df[location_col].value_counts().head(3)
                 recommendations.append(f"**🌍 Geographic Focus**: Top 3 locations are {', '.join(top_locations.index.tolist())}. Consider location-specific offerings.")
+            
+            # Business recommendations from pipeline
+            business_rec_path = "outputs/business_recommendations.csv"
+            if os.path.exists(business_rec_path):
+                business_recs = pd.read_csv(business_rec_path)
+                st.markdown("### 🎯 Pipeline Recommendations")
+                for _, rec in business_recs.iterrows():
+                    with st.expander(f"{rec['cluster_name']} - Strategy"):
+                        st.markdown(f"**Targeting Strategy:** {rec['targeting_strategy']}")
+                        st.markdown(f"**Recommended Products:** {rec['recommended_products']}")
+                        st.markdown(f"**Marketing Channels:** {rec['marketing_channels']}")
+                        st.markdown(f"**Risk Management:** {rec['risk_management']}")
             
             # If no specific recommendations, provide general ones
             if not recommendations:
@@ -1299,7 +1362,7 @@ elif selected_page == "📈 Insights":
         
         else:
             # If no data, show static insights
-            st.warning("No data available. Please load data in Dashboard first.")
+            st.warning("No data available. Please run the pipeline first.")
             
             st.markdown("### 💼 General Recommendations")
             
@@ -1410,12 +1473,30 @@ elif selected_page == "👥 Team":
     st.markdown("---")
     st.markdown("### 📊 Project Impact")
     
-    impact_stats = [
-        ("5200+", "Customer Records Analyzed"),
-        ("5", "Customer Segments Identified"),
-        ("12.5%", "Risk Rate Reduction Potential"),
-        ("68%", "Digital Adoption Improvement")
-    ]
+    # Try to load actual data for impact stats
+    try:
+        if os.path.exists("outputs/processed_data.csv"):
+            df = pd.read_csv("outputs/processed_data.csv")
+            impact_stats = [
+                (f"{len(df):,}+", "Customer Records Analyzed"),
+                (f"{df['cluster'].nunique() if 'cluster' in df.columns else 5}", "Customer Segments Identified"),
+                (f"{(df['risk_score'] > 0.6).mean()*100:.1f}%" if 'risk_score' in df.columns else "12.5%", "Risk Rate"),
+                (f"{((df['digital_adoption_score'] > 2).mean()*100 if 'digital_adoption_score' in df.columns else 68):.0f}%", "Digital Adoption Rate")
+            ]
+        else:
+            impact_stats = [
+                ("5200+", "Customer Records Analyzed"),
+                ("5", "Customer Segments Identified"),
+                ("12.5%", "Risk Rate Reduction Potential"),
+                ("68%", "Digital Adoption Improvement")
+            ]
+    except:
+        impact_stats = [
+            ("5200+", "Customer Records Analyzed"),
+            ("5", "Customer Segments Identified"),
+            ("12.5%", "Risk Rate Reduction Potential"),
+            ("68%", "Digital Adoption Improvement")
+        ]
     
     cols = st.columns(4)
     for idx, (value, label) in enumerate(impact_stats):
@@ -1518,14 +1599,16 @@ elif selected_page == "⚙️ Settings":
         
         # Data file information
         data_files = [
-            ("📊 Raw Data", "financial_data.csv"),
-            ("🔧 Processed Data", "outputs/processed_data.csv"),
+            ("📊 Processed Data", "outputs/processed_data.csv"),
             ("📊 Cluster Profiles", "outputs/cluster_profiles.csv"),
-            ("💡 Recommendations", "outputs/business_recommendations.csv")
+            ("💡 Business Recommendations", "outputs/business_recommendations.csv"),
+            ("📈 Power BI Data", "powerbi/powerbi_dashboard_data.csv")
         ]
         
+        data_exists = False
         for name, filepath in data_files:
             if os.path.exists(filepath):
+                data_exists = True
                 file_size = os.path.getsize(filepath) / 1024  # KB
                 modified_time = datetime.fromtimestamp(os.path.getmtime(filepath))
                 
@@ -1538,6 +1621,9 @@ elif selected_page == "⚙️ Settings":
                     st.text(modified_time.strftime("%Y-%m-%d %H:%M:%S"))
             else:
                 st.text(f"{name}: ❌ Not Found")
+        
+        if not data_exists:
+            st.warning("No pipeline data found. Run the master_pipeline.py first.")
         
         # Data actions
         st.markdown("### 🧹 Data Actions")
