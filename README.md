@@ -1,14 +1,14 @@
 # Customer Financial Risk Prediction Dashboard
 
-##  Project Overview
+## 📊 Project Overview
 
 A comprehensive machine learning pipeline and interactive dashboard for predicting customer financial risk in African markets. This project analyzes **5,200+ customer records** to provide actionable insights, customer segmentation, and risk predictions through an intuitive **Streamlit** interface.
 
 ---
 
-##  Key Features
+## 🎯 Key Features
 
-###  Data Analysis & ML Pipeline
+### 🔍 Data Analysis & ML Pipeline
 
 * **5,200+ Customer Records Analysis**: Comprehensive financial data processing
 * **Customer Segmentation**: Unsupervised clustering into distinct customer groups
@@ -16,7 +16,7 @@ A comprehensive machine learning pipeline and interactive dashboard for predicti
 * **Sentiment Analysis**: NLP-powered analysis of customer feedback
 * **Feature Engineering**: Advanced feature creation for better predictions
 
-###  Interactive Dashboard
+### 📊 Interactive Dashboard
 
 * **Real-time Predictions**: API-driven single and batch predictions
 * **Customer Analytics**: Deep filtering and segmentation analysis
@@ -26,14 +26,14 @@ A comprehensive machine learning pipeline and interactive dashboard for predicti
 
 ---
 
-##  Quick Start
+## 🚀 Quick Start
 
-###  Prerequisites
+### ✅ Prerequisites
 
 * Python 3.8+
 * pip package manager
 
-###  Installation
+### 📦 Installation
 
 1. **Clone the repository**
 
@@ -85,7 +85,7 @@ streamlit run streamlit_app.py
 
 ---
 
-##  Project Structure
+## 📁 Project Structure
 
 ```text
 customer-risk-dashboard/
@@ -117,9 +117,9 @@ customer-risk-dashboard/
 
 ---
 
-##  Technical Stack
+## 🛠️ Technical Stack
 
-###  Backend
+### 🔧 Backend
 
 * **Python**
 * **Scikit-learn**
@@ -127,13 +127,13 @@ customer-risk-dashboard/
 * **FastAPI**
 * **Joblib**
 
-###  Frontend
+### 🎨 Frontend
 
 * **Streamlit**
 * **Plotly**
 * **Matplotlib & Seaborn**
 
-###  Data Processing
+### 📐 Data Processing
 
 * Feature Engineering
 * PCA (Dimensionality Reduction)
@@ -170,19 +170,19 @@ customer-risk-dashboard/
 
 ---
 
-##  Dashboard Pages
+## 🎨 Dashboard Pages
 
-*  **Dashboard** – Executive summary
-*  **Customer Analysis** – Deep filtering
-*  **Clusters** – Segment comparisons
-*  **Predict** – Risk prediction & API testing
-*  **Insights** – Business recommendations
-*  **Team** – Project contributors & [Dataverse Africa](https://dataverseafrica.org)
-*  **Settings** – System configuration
+* 🏠 **Dashboard** – Executive summary
+* 🔍 **Customer Analysis** – Deep filtering
+* 📊 **Clusters** – Segment comparisons
+* 🎯 **Predict** – Risk prediction & API testing
+* 📈 **Insights** – Business recommendations
+* 👥 **Team** – Project contributors & [Dataverse Africa](https://dataverseafrica.org)
+* ⚙️ **Settings** – System configuration
 
 ---
 
-##  Sample Outputs
+## 📊 Sample Outputs
 
 ### Customer Segments
 
@@ -202,7 +202,7 @@ customer-risk-dashboard/
 
 ---
 
-##  API Endpoints
+## 🔧 API Endpoints
 
 | Endpoint       | Method | Description       |
 | -------------- | ------ | ----------------- |
@@ -214,7 +214,7 @@ customer-risk-dashboard/
 
 ---
 
-##  Requirements
+## 📋 Requirements
 
 See `requirements.txt`. Key packages:
 
@@ -231,14 +231,14 @@ See `requirements.txt`. Key packages:
 
 **Dataverse Africa Internship Program**
 
-* **Amarachi Florence** – Financial Data and MEAL Analyst
-* Thato Maelane – Data Scientist 
-* Philip Odiachi – Data Analyst
+* **Amarachi Florence** – Data Analyst & Project Lead
+* Thato Maelane – Machine Learning Engineer
+* Philip Odiachi – Data Engineer
 * Mavis – Business Analyst
 
 ---
 
-##  About Dataverse Africa
+## 🌍 About Dataverse Africa
 
 [Dataverse Africa](https://dataverseafrica.org) is empowering Africa’s digital future through:
 
@@ -249,7 +249,7 @@ See `requirements.txt`. Key packages:
 
 ---
 
-##  Business Impact
+## 📈 Business Impact
 
 ### For Financial Institutions
 
@@ -266,7 +266,7 @@ See `requirements.txt`. Key packages:
 
 ---
 
-##  Getting Started with Your Data
+## 🚀 Getting Started with Your Data
 
 1. Prepare your dataset
 2. Run `python project_main.py`
@@ -275,15 +275,16 @@ See `requirements.txt`. Key packages:
 
 ---
 
-##  License
+## 📄 License
 
 Developed as part of the **Dataverse Africa Internship Program**. All rights reserved.
 
 ---
 
-##  Links
+## 🔗 Links
 
-* **Dashboard**: [http://localhost:8501](http://localhost:8501)
+* **Live Streamlit Dashboard**: [African Financial Risk Dashboard](https://african-financial-risk-dashboard-d.streamlit.app/)
+* **Local Dashboard**: [http://localhost:8501](http://localhost:8501)
 * **API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 * **Dataverse Africa**: [https://dataverseafrica.org](https://dataverseafrica.org)
 
