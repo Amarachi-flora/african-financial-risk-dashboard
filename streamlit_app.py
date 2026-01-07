@@ -38,6 +38,16 @@ import os
 from datetime import datetime
 import time
 
+
+import os
+
+# Create necessary directories if they don't exist
+os.makedirs("outputs", exist_ok=True)
+os.makedirs("models", exist_ok=True)
+os.makedirs("charts", exist_ok=True)
+os.makedirs("powerbi", exist_ok=True)
+os.makedirs("eda_reports", exist_ok=True)
+
 # ============================================
 # PAGE CONFIGURATION
 # ============================================
@@ -1328,16 +1338,16 @@ elif selected_page == "👥 Team":
     # Team members - SIMPLIFIED with just names
     team_members = [
         {
-            "name": "AMARACHI FLORENCE",
-            "role": "Data Analyst & Project Lead"
+            "name": "Amarachi Florence",
+            "role": "Financial Data and MEAL Analyst"
         },
         {
             "name": "Thato Maelane",
-            "role": "Machine Learning Engineer"
+            "role": "Data Scientist"
         },
         {
             "name": "Philip Odiachi", 
-            "role": "Data Engineer"
+            "role": "Data Analyst"
         },
         {
             "name": "Mavis",
@@ -1352,7 +1362,7 @@ elif selected_page == "👥 Team":
             st.markdown(f'''
             <div class="team-card">
                 <h4 style="color: #667eea; margin-bottom: 10px;">{member['name']}</h4>
-                <p><strong>Role:</strong> {member['role']}</p>
+                <p style="color: black;"><strong>Role:</strong> {member['role']}</p>
             </div>
             ''', unsafe_allow_html=True)
     
