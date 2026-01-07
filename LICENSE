@@ -1,0 +1,5 @@
+cat > LICENSE << 'EOF'
+MIT License
+Copyright (c) 2024 Dataverse Africa Internship Team
+[Rest of MIT license...]
+EOF

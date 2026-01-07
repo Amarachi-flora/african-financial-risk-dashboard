@@ -1,0 +1,13 @@
+# In VSCode Terminal
+cat > .gitignore << 'EOF'
+# Python
+__pycache__/
+venv/
+
+# Generated files (don't push these)
+models/
+outputs/
+charts/
+powerbi/
+eda_reports/
+EOF
