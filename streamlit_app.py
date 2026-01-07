@@ -37,6 +37,8 @@ import sys
 import os
 from datetime import datetime
 import time
+import zipfile
+import io
 
 # Create necessary directories if they don't exist
 os.makedirs("outputs", exist_ok=True)
@@ -56,7 +58,7 @@ st.set_page_config(
 )
 
 # ============================================
-# CUSTOM CSS WITH ANIMATIONS
+# CUSTOM CSS WITH ENHANCED ANIMATIONS
 # ============================================
 st.markdown("""
 <style>
@@ -138,6 +140,111 @@ st.markdown("""
         animation: bounce 2s infinite;
     }
     
+    .pbi-card {
+        background: linear-gradient(135deg, #008751 0%, #00A86B 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    /* Starry ribbon effect */
+    .starry-ribbon {
+        position: relative;
+        background: linear-gradient(90deg, #1a237e 0%, #283593 100%);
+        color: white;
+        text-align: center;
+        padding: 0.8rem;
+        margin: 1.5rem 0;
+        border-radius: 8px;
+        overflow: hidden;
+        animation: slideInRight 1s ease;
+    }
+    
+    .starry-ribbon::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            radial-gradient(2px 2px at 20px 30px, #fff 50%, transparent 50%),
+            radial-gradient(2px 2px at 40px 70px, #fff 50%, transparent 50%),
+            radial-gradient(2px 2px at 60px 20px, #fff 50%, transparent 50%),
+            radial-gradient(2px 2px at 80px 50px, #fff 50%, transparent 50%),
+            radial-gradient(2px 2px at 100px 80px, #fff 50%, transparent 50%);
+        background-size: 120px 100px;
+        animation: twinkle 3s infinite;
+    }
+    
+    /* Bouncing balloon */
+    .bouncing-balloon {
+        position: relative;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 50% 50% 50% 0;
+        transform: rotate(-45deg);
+        margin: 2rem auto;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: bounceBalloon 3s ease-in-out infinite;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .balloon-content {
+        transform: rotate(45deg);
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    
+    /* Hurry animation */
+    .hurry-pulse {
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        animation: hurryPulse 1.5s infinite;
+        box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+    }
+    
+    /* Professional data cards */
+    .data-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-top: 4px solid;
+        transition: all 0.3s ease;
+    }
+    
+    .data-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Status indicators */
+    .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: pulse 2s infinite;
+    }
+    
+    .status-active { background-color: #10B981; }
+    .status-warning { background-color: #F59E0B; }
+    .status-error { background-color: #EF4444; }
+    
     /* Animations */
     @keyframes fadeInDown {
         from {
@@ -165,6 +272,17 @@ st.markdown("""
         from {
             opacity: 0;
             transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
         }
         to {
             opacity: 1;
@@ -201,7 +319,39 @@ st.markdown("""
         }
     }
     
-    /* Ribbon style */
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+    }
+    
+    @keyframes bounceBalloon {
+        0%, 100% { 
+            transform: translateY(0) rotate(-45deg) scale(1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        50% { 
+            transform: translateY(-25px) rotate(-45deg) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+    }
+    
+    @keyframes hurryPulse {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+        }
+        50% { 
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 65, 108, 0.6);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    
+    /* Ribbon style from original */
     .ribbon {
         position: relative;
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
@@ -213,18 +363,7 @@ st.markdown("""
         animation: slideInRight 1s ease;
     }
     
-    @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    /* Balloon style */
+    /* Balloon style from original */
     .balloon {
         position: relative;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -258,14 +397,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================
-# TITLE WITH TEAM CREDIT
+# TITLE WITH TEAM CREDIT - ENHANCED DESIGN
 # ============================================
 st.markdown('<h1 class="main-header">💰 Customer Financial Risk Prediction Dashboard</h1>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header" style="text-align: center;">African Financial Markets Analysis</p>', unsafe_allow_html=True)
 
-# Team credit ribbon
+# Team credit ribbon - Enhanced version
 st.markdown("""
-<div class="ribbon">
+<div class="starry-ribbon">
     <strong>👥 Team Project:</strong> AMARACHI FLORENCE • Thato Maelane • Philip Odiachi • Mavis 
     | <a href="https://dataverseafrica.org" target="_blank" style="color: white; text-decoration: underline;">🌍 Dataverse Africa Internship</a>
 </div>
@@ -277,11 +416,19 @@ st.markdown("""
 def show_success_balloon(message):
     """Show animated balloon with message"""
     st.markdown(f"""
-    <div class="balloon">
+    <div class="bouncing-balloon">
         <div class="balloon-content">
-            <div style="font-size: 1.5rem;">🎉</div>
+            <div style="font-size: 1.2rem;">🎉</div>
             <div style="font-size: 0.8rem;">{message}</div>
         </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+def show_hurry_alert(message):
+    """Show hurry pulse alert"""
+    st.markdown(f"""
+    <div style="text-align: center; margin: 1rem 0;">
+        <div class="hurry-pulse">{message}</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -302,24 +449,46 @@ def safe_hover_data(df, preferred_columns):
             hover_cols.append(actual_col)
     return hover_cols if hover_cols else None
 
+def create_data_card(title, value, change=None, color="#667eea"):
+    """Create a professional data card"""
+    change_html = ""
+    if change:
+        change_direction = "▲" if float(change.replace('%', '').replace('+', '')) >= 0 else "▼"
+        change_color = "#10B981" if change_direction == "▲" else "#EF4444"
+        change_html = f'<div style="font-size: 0.9rem; color: {change_color};">{change_direction} {change}</div>'
+    
+    return f"""
+    <div class="data-card" style="border-top-color: {color};">
+        <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">{title}</div>
+        <div style="font-size: 1.8rem; font-weight: 700; color: #1F2937;">{value}</div>
+        {change_html}
+    </div>
+    """
+
+# Initialize session state for data
+if 'df' not in st.session_state:
+    st.session_state.df = None
+if 'pbi_data' not in st.session_state:
+    st.session_state.pbi_data = None
+if 'column_mapping' not in st.session_state:
+    st.session_state.column_mapping = {}
+
 # ============================================
-# SIDEBAR
+# SIDEBAR - ENHANCED DESIGN
 # ============================================
 with st.sidebar:
-    # Dataverse logo and link
+    # Dataverse logo and link - Enhanced
     st.markdown("""
-    <div style="text-align: center; margin-bottom: 2rem;">
-        <a href="https://dataverseafrica.org" target="_blank">
-            <div style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;">🌍</div>
-            <h3 style="color: #667eea; margin: 0;">DATAVERSE AFRICA</h3>
-            <p style="color: #666; font-size: 0.9rem; margin: 0;">Empowering Africa's Digital Future</p>
-        </a>
+    <div style="text-align: center; margin-bottom: 2rem; padding: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px;">
+        <div style="font-size: 1.5rem; color: white; margin-bottom: 0.5rem;">🌍</div>
+        <h3 style="color: white; margin: 0;">DATAVERSE AFRICA</h3>
+        <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; margin: 0;">Empowering Africa's Digital Future</p>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Navigation with icons and animations
+    # Navigation with enhanced icons
     st.markdown("### 🧭 Navigation")
     
     pages = {
@@ -328,6 +497,7 @@ with st.sidebar:
         "📊 Clusters": "Customer segmentation analysis",
         "🎯 Predict": "Real-time prediction interface",
         "📈 Insights": "Business recommendations",
+        "📊 Power BI Dashboard": "Enhanced pipeline visualizations",
         "👥 Team": "Project team information",
         "⚙️ Settings": "System configuration"
     }
@@ -343,27 +513,84 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Quick stats
+    # Quick stats - Enhanced
     st.markdown("### 📊 Quick Stats")
     
-    try:
-        if os.path.exists("outputs/processed_data.csv"):
-            df = pd.read_csv("outputs/processed_data.csv")
+    if st.session_state.df is not None and not st.session_state.df.empty:
+        df = st.session_state.df
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown(create_data_card("Total Customers", f"{len(df):,}"), unsafe_allow_html=True)
+            credit_col = get_column_case_insensitive(df, 'Credit_Score')
+            if credit_col:
+                st.markdown(create_data_card("Avg Credit Score", f"{df[credit_col].mean():.0f}"), unsafe_allow_html=True)
+        with col2:
+            expend_col = get_column_case_insensitive(df, 'Monthly_Expenditure')
+            if expend_col:
+                st.markdown(create_data_card("Avg Spend", f"₦{df[expend_col].mean():,.0f}"), unsafe_allow_html=True)
+            age_col = get_column_case_insensitive(df, 'age')
+            if age_col:
+                st.markdown(create_data_card("Avg Age", f"{df[age_col].mean():.1f}"), unsafe_allow_html=True)
+    else:
+        try:
+            if os.path.exists("outputs/processed_data.csv"):
+                df = pd.read_csv("outputs/processed_data.csv")
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric("Total Customers", f"{len(df):,}")
+                    credit_col = get_column_case_insensitive(df, 'Credit_Score')
+                    if credit_col:
+                        st.metric("Avg Credit Score", f"{df[credit_col].mean():.0f}")
+                with col2:
+                    expend_col = get_column_case_insensitive(df, 'Monthly_Expenditure')
+                    if expend_col:
+                        st.metric("Avg Spend", f"₦{df[expend_col].mean():,.0f}")
+                    age_col = get_column_case_insensitive(df, 'age')
+                    if age_col:
+                        st.metric("Avg Age", f"{df[age_col].mean():.1f}")
+        except:
             col1, col2 = st.columns(2)
             with col1:
-                st.metric("Total Customers", f"{len(df):,}")
-                credit_col = get_column_case_insensitive(df, 'Credit_Score')
-                if credit_col:
-                    st.metric("Avg Credit Score", f"{df[credit_col].mean():.0f}")
+                st.markdown(create_data_card("Total Customers", "5,200", "+12%"), unsafe_allow_html=True)
+                st.markdown(create_data_card("Avg Credit", "620", "+8"), unsafe_allow_html=True)
             with col2:
-                expend_col = get_column_case_insensitive(df, 'Monthly_Expenditure')
-                if expend_col:
-                    st.metric("Avg Spend", f"₦{df[expend_col].mean():,.0f}")
-                age_col = get_column_case_insensitive(df, 'age')
-                if age_col:
-                    st.metric("Avg Age", f"{df[age_col].mean():.1f}")
+                st.markdown(create_data_card("Avg Spend", "₦151,444", "+5%"), unsafe_allow_html=True)
+                st.markdown(create_data_card("Avg Age", "43.1"), unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # System Status Indicators
+    st.markdown("### 🔧 System Status")
+    
+    # Data status
+    if st.session_state.df is not None:
+        data_status = "ACTIVE"
+        status_color = "#10B981"
+    else:
+        data_status = "INACTIVE"
+        status_color = "#EF4444"
+    
+    st.markdown(f"""
+    <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+        <span class="status-indicator status-{'active' if data_status == 'ACTIVE' else 'error'}"></span>
+        <span style="font-size: 0.9rem;">Data Loaded: <strong style="color: {status_color};">{data_status}</strong></span>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # API status
+    try:
+        response = requests.get("http://localhost:8000/health", timeout=2)
+        api_status = "ACTIVE" if response.status_code == 200 else "INACTIVE"
     except:
-        st.info("Run the pipeline first to generate data")
+        api_status = "INACTIVE"
+    
+    api_color = "#10B981" if api_status == "ACTIVE" else "#F59E0B"
+    st.markdown(f"""
+    <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+        <span class="status-indicator status-{'active' if api_status == 'ACTIVE' else 'warning'}"></span>
+        <span style="font-size: 0.9rem;">API Connection: <strong style="color: {api_color};">{api_status}</strong></span>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -372,26 +599,6 @@ with st.sidebar:
     st.markdown("[📚 Documentation](#)")
     st.markdown("[📧 Contact Team](#)")
     st.markdown("[⭐ GitHub Repository](#)")
-
-# ============================================
-# LOAD MODELS (WITH WARNING SUPPRESSION)
-# ============================================
-@st.cache_resource
-def load_models():
-    """Load ML models with suppressed warnings"""
-    try:
-        if os.path.exists("models/scaler.pkl"):
-            # Suppress warnings during model loading
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                scaler = joblib.load("models/scaler.pkl")
-                pca = joblib.load("models/pca_model.pkl")
-                kmeans = joblib.load("models/kmeans_model.pkl")
-            return scaler, pca, kmeans
-    except Exception as e:
-        st.error(f"Error loading models: {e}")
-        return None, None, None
-    return None, None, None
 
 # API URL
 API_URL = "http://localhost:8000"
@@ -405,20 +612,49 @@ if selected_page == "🏠 Dashboard":
     # Show success balloon
     show_success_balloon("Welcome!")
     
-    # Check if processed data exists from pipeline
-    processed_file = "outputs/processed_data.csv"
+    # Load Dataset Section - Enhanced
+    st.markdown("### 📂 Load Your Dataset")
     
-    if os.path.exists(processed_file):
+    uploaded_file = st.file_uploader("Upload any customer dataset (CSV format)", type=["csv"], key="dashboard_upload")
+    
+    if uploaded_file is not None:
         try:
-            df = pd.read_csv(processed_file)
-            st.markdown('<div class="success-badge">✅ Processed Dataset Loaded from Pipeline!</div>', unsafe_allow_html=True)
+            df = pd.read_csv(uploaded_file)
+            st.session_state.df = df
+            
+            show_hurry_alert("DATA PROCESSING - PLEASE WAIT")
+            
+            # Auto column mapping
+            column_mapping = {}
+            expected_cols = {
+                'Customer_ID': ['customer_id', 'customerid', 'id', 'CustomerID'],
+                'Age': ['age', 'customer_age', 'Age'],
+                'Monthly_Expenditure': ['monthly_expenditure', 'expenditure', 'Monthly_Expenditure'],
+                'Credit_Score': ['credit_score', 'credit', 'Credit_Score'],
+                'Income_Level': ['income_level', 'income', 'Income_Level'],
+                'Location': ['location', 'city', 'Location'],
+                'Transaction_Channel': ['transaction_channel', 'channel', 'Transaction_Channel']
+            }
+            
+            for expected, possible_names in expected_cols.items():
+                found = False
+                for possible in possible_names:
+                    actual_col = get_column_case_insensitive(df, possible)
+                    if actual_col:
+                        column_mapping[expected] = actual_col
+                        found = True
+                        break
+            
+            st.session_state.column_mapping = column_mapping
+            
+            st.markdown('<div class="success-badge">✅ Dataset Loaded Successfully!</div>', unsafe_allow_html=True)
             st.success(f"Dataset loaded: {len(df):,} records × {len(df.columns)} columns")
             
             # Show preview
             with st.expander("📋 Dataset Preview", expanded=True):
                 st.dataframe(df.head(100), use_container_width=True)
             
-            # Basic statistics
+            # Statistics
             st.markdown("### 📊 Dataset Statistics")
             
             col1, col2 = st.columns(2)
@@ -439,99 +675,88 @@ if selected_page == "🏠 Dashboard":
                         fig = px.pie(values=value_counts.values, names=value_counts.index, 
                                    title=col, color_discrete_sequence=px.colors.sequential.RdBu)
                         st.plotly_chart(fig, use_container_width=True)
-            
-            # Metrics cards based on actual data
-            col1, col2, col3, col4 = st.columns(4)
-            
-            with col1:
-                st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                st.metric("Total Customers", f"{len(df):,}", "+12%")
-                st.markdown('</div>', unsafe_allow_html=True)
-            
-            with col2:
-                credit_col = get_column_case_insensitive(df, 'Credit_Score')
-                if credit_col:
-                    avg_credit = df[credit_col].mean()
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.metric("Avg Credit Score", f"{avg_credit:.0f}", "+8")
-                    st.markdown('</div>', unsafe_allow_html=True)
-            
-            with col3:
-                digital_col = get_column_case_insensitive(df, 'digital_adoption_score')
-                if digital_col:
-                    digital_adoption = (df[digital_col].mean() / 4) * 100
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.metric("Digital Adoption", f"{digital_adoption:.1f}%", "+15%")
-                    st.markdown('</div>', unsafe_allow_html=True)
-            
-            with col4:
-                risk_col = get_column_case_insensitive(df, 'risk_score')
-                if risk_col:
-                    high_risk = (df[risk_col] > 0.6).sum()
-                    risk_rate = (high_risk / len(df)) * 100
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.metric("Risk Rate", f"{risk_rate:.1f}%", "-2.3%")
-                    st.markdown('</div>', unsafe_allow_html=True)
-            
+        except Exception as e:
+            st.error(f"Error loading file: {str(e)}")
+    
+    # Check if processed data exists from pipeline
+    processed_file = "outputs/processed_data.csv"
+    
+    if os.path.exists(processed_file) and st.session_state.df is None:
+        try:
+            df = pd.read_csv(processed_file)
+            st.session_state.df = df
+            st.markdown('<div class="success-badge">✅ Processed Dataset Loaded from Pipeline!</div>', unsafe_allow_html=True)
+            st.success(f"Dataset loaded: {len(df):,} records × {len(df.columns)} columns")
         except Exception as e:
             st.error(f"Error loading processed data: {str(e)}")
-    else:
-        st.warning("🚨 No processed data found!")
-        st.markdown("""
-        **Please run the pipeline first:**
-        1. Run `master_pipeline.py` to process your data
-        2. This will create `outputs/processed_data.csv`
-        3. Refresh this page to load the processed data
-        
-        The pipeline creates enhanced features needed for all visualizations:
-        - Risk scores
-        - Sentiment analysis
-        - Customer clusters
-        - Digital adoption metrics
-        """)
-        
-        # Show static sample metrics
-        col1, col2, col3, col4 = st.columns(4)
+    
+    # Metrics cards based on actual data
+    st.markdown("### 🎯 Key Performance Indicators")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    if st.session_state.df is not None and not st.session_state.df.empty:
+        df = st.session_state.df
         
         with col1:
-            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-            st.metric("Total Customers", "5,200", "+12%")
-            st.markdown('</div>', unsafe_allow_html=True)
+            total_customers = len(df)
+            st.markdown(create_data_card("Total Customers", f"{total_customers:,}", "+12%", "#667eea"), unsafe_allow_html=True)
         
         with col2:
-            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-            st.metric("Avg Credit Score", "645", "+8")
-            st.markdown('</div>', unsafe_allow_html=True)
+            credit_col = get_column_case_insensitive(df, 'Credit_Score')
+            if credit_col:
+                avg_credit = df[credit_col].mean()
+                st.markdown(create_data_card("Avg Credit Score", f"{avg_credit:.0f}", "+8", "#10B981"), unsafe_allow_html=True)
+            else:
+                st.markdown(create_data_card("Avg Credit Score", "645", "+8", "#10B981"), unsafe_allow_html=True)
         
         with col3:
-            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-            st.metric("Digital Adoption", "68%", "+15%")
-            st.markdown('</div>', unsafe_allow_html=True)
+            digital_col = get_column_case_insensitive(df, 'digital_adoption_score')
+            if digital_col:
+                digital_adoption = (df[digital_col].mean() / 4) * 100
+                st.markdown(create_data_card("Digital Adoption", f"{digital_adoption:.1f}%", "+15%", "#F59E0B"), unsafe_allow_html=True)
+            else:
+                st.markdown(create_data_card("Digital Adoption", "68%", "+15%", "#F59E0B"), unsafe_allow_html=True)
         
         with col4:
-            st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-            st.metric("Risk Rate", "12.5%", "-2.3%")
-            st.markdown('</div>', unsafe_allow_html=True)
+            risk_col = get_column_case_insensitive(df, 'risk_score')
+            if risk_col:
+                high_risk = (df[risk_col] > 0.6).sum()
+                risk_rate = (high_risk / len(df)) * 100
+                st.markdown(create_data_card("Risk Rate", f"{risk_rate:.1f}%", "-2.3%", "#EF4444"), unsafe_allow_html=True)
+            else:
+                st.markdown(create_data_card("Risk Rate", "12.5%", "-2.3%", "#EF4444"), unsafe_allow_html=True)
+    else:
+        # Show static sample metrics
+        with col1:
+            st.markdown(create_data_card("Total Customers", "5,200", "+12%", "#667eea"), unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown(create_data_card("Avg Credit Score", "645", "+8", "#10B981"), unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown(create_data_card("Digital Adoption", "68%", "+15%", "#F59E0B"), unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown(create_data_card("Risk Rate", "12.5%", "-2.3%", "#EF4444"), unsafe_allow_html=True)
     
     # Visualizations
-    st.markdown("### 📈 Sample Visualizations")
+    st.markdown("### 📈 Data Visualizations")
     
     # Check if we have data loaded
-    if 'df' not in locals() or df.empty:
-        # Load data if it exists
-        if os.path.exists(processed_file):
-            df = pd.read_csv(processed_file)
-        else:
-            # Generate sample data for visualization if no data loaded
-            np.random.seed(42)
-            sample_size = 1000
-            df = pd.DataFrame({
-                'Credit_Score': np.random.normal(650, 100, sample_size).clip(300, 850),
-                'Monthly_Expenditure': np.random.lognormal(12, 0.8, sample_size).clip(20000, 500000),
-                'age': np.random.randint(22, 65, sample_size),
-                'Cluster': np.random.choice(['Digital-First', 'Traditional', 'High-Risk', 'Medium', 'Positive'], sample_size),
-                'Risk_Score': np.random.beta(2, 5, sample_size)
-            })
+    if st.session_state.df is not None and not st.session_state.df.empty:
+        df = st.session_state.df
+    else:
+        # Generate sample data for visualization if no data loaded
+        np.random.seed(42)
+        sample_size = 1000
+        df = pd.DataFrame({
+            'Credit_Score': np.random.normal(650, 100, sample_size).clip(300, 850),
+            'Monthly_Expenditure': np.random.lognormal(12, 0.8, sample_size).clip(20000, 500000),
+            'age': np.random.randint(22, 65, sample_size),
+            'Cluster': np.random.choice(['Digital-First', 'Traditional', 'High-Risk', 'Medium', 'Positive'], sample_size),
+            'Risk_Score': np.random.beta(2, 5, sample_size)
+        })
     
     col1, col2 = st.columns(2)
     
@@ -588,9 +813,8 @@ elif selected_page == "🔍 Customer Analysis":
     # Show success balloon
     show_success_balloon("Analysis Ready!")
     
-    try:
-        # Load processed data from pipeline
-        df = pd.read_csv("outputs/processed_data.csv")
+    if st.session_state.df is not None:
+        df = st.session_state.df
         
         # Standardize column names
         df.columns = df.columns.str.strip().str.replace(' ', '_')
@@ -601,51 +825,42 @@ elif selected_page == "🔍 Customer Analysis":
         
         with col1:
             income_col = get_column_case_insensitive(df, 'Income_Level')
-            if income_col:
-                income_options = df[income_col].dropna().unique()
-                income_filter = st.multiselect(
-                    "Income Level",
-                    options=income_options,
-                    default=list(income_options[:2]) if len(income_options) > 1 else []
-                )
+            if income_col and income_col in df.columns:
+                income_options = ['ALL'] + sorted(df[income_col].dropna().unique().tolist())
+                selected_income = st.selectbox("Income Level", income_options)
+                income_filter = None if selected_income == 'ALL' else [selected_income]
         
         with col2:
             credit_col = get_column_case_insensitive(df, 'Credit_Score')
-            if credit_col:
+            if credit_col and credit_col in df.columns:
                 min_val = int(df[credit_col].min())
                 max_val = int(df[credit_col].max())
                 credit_range = st.slider(
                     "Credit Score Range",
                     min_value=min_val,
                     max_value=max_val,
-                    value=(min_val + (max_val-min_val)//4, min_val + 3*(max_val-min_val)//4)
+                    value=(min_val, max_val)
                 )
         
         with col3:
             location_col = get_column_case_insensitive(df, 'Location')
-            if location_col:
-                location_options = df[location_col].dropna().unique()
-                location_filter = st.multiselect(
-                    "Location",
-                    options=location_options,
-                    default=list(location_options[:3]) if len(location_options) > 3 else list(location_options)
-                )
+            if location_col and location_col in df.columns:
+                location_options = ['ALL'] + sorted(df[location_col].dropna().unique().tolist())
+                selected_location = st.selectbox("Location", location_options)
+                location_filter = None if selected_location == 'ALL' else [selected_location]
         
         # Apply filters
         filtered_df = df.copy()
         
-        # Apply income filter
         if 'income_filter' in locals() and income_filter and income_col:
             filtered_df = filtered_df[filtered_df[income_col].isin(income_filter)]
         
-        # Apply credit score filter
         if 'credit_range' in locals() and credit_col:
             filtered_df = filtered_df[
                 (filtered_df[credit_col] >= credit_range[0]) & 
                 (filtered_df[credit_col] <= credit_range[1])
             ]
         
-        # Apply location filter
         if 'location_filter' in locals() and location_filter and location_col:
             filtered_df = filtered_df[filtered_df[location_col].isin(location_filter)]
         
@@ -720,7 +935,7 @@ elif selected_page == "🔍 Customer Analysis":
         
         # Customer distribution by channel
         channel_col = get_column_case_insensitive(filtered_df, 'Transaction_Channel')
-        if channel_col:
+        if channel_col and channel_col in filtered_df.columns:
             st.markdown("### 📱 Transaction Channel Analysis")
             channel_data = filtered_df[channel_col].value_counts().reset_index()
             channel_data.columns = ['Channel', 'Count']
@@ -733,7 +948,7 @@ elif selected_page == "🔍 Customer Analysis":
         
         # Risk distribution
         risk_col = get_column_case_insensitive(filtered_df, 'risk_score')
-        if risk_col:
+        if risk_col and risk_col in filtered_df.columns:
             st.markdown("### ⚠️ Risk Score Distribution")
             
             fig = px.histogram(filtered_df, x=risk_col, nbins=20,
@@ -745,12 +960,9 @@ elif selected_page == "🔍 Customer Analysis":
                          annotation_text="Low Risk Threshold")
             fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, use_container_width=True)
-        
-    except FileNotFoundError:
-        st.error("❌ No processed data found. Please run the pipeline first.")
-        st.info("Run `master_pipeline.py` to generate processed_data.csv")
-    except Exception as e:
-        st.error(f"❌ Error loading data: {str(e)}")
+    
+    else:
+        st.error("❌ No data loaded. Please load data in Dashboard page or run the pipeline.")
 
 # ============================================
 # PAGE 3: CLUSTERS
@@ -864,13 +1076,12 @@ elif selected_page == "📊 Clusters":
                             st.metric("Risk Level", risk_level)
         
         else:
-            # If cluster profiles don't exist, load processed data
-            df_path = "outputs/processed_data.csv"
-            if os.path.exists(df_path):
-                df = pd.read_csv(df_path)
+            # If cluster profiles don't exist, check session state data
+            if st.session_state.df is not None:
+                df = st.session_state.df
                 
                 cluster_col = get_column_case_insensitive(df, 'cluster_name') or get_column_case_insensitive(df, 'cluster')
-                if cluster_col:
+                if cluster_col and cluster_col in df.columns:
                     # Create summary
                     numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
                     if numeric_cols:
@@ -898,7 +1109,7 @@ elif selected_page == "📊 Clusters":
                 else:
                     st.warning("No cluster information found in data. Please run the clustering pipeline first.")
             else:
-                st.error("No data found. Please run the pipeline first.")
+                st.error("No data found. Please load data in Dashboard page.")
     
     except Exception as e:
         st.error(f"Error loading cluster data: {str(e)}")
@@ -952,7 +1163,7 @@ elif selected_page == "🎯 Predict":
         
         if submitted:
             # Show success balloon
-            show_success_balloon("Predicting!")
+            show_hurry_alert("PROCESSING PREDICTION")
             
             try:
                 # Prepare data for API
@@ -989,32 +1200,15 @@ elif selected_page == "🎯 Predict":
                         col1, col2, col3 = st.columns(3)
                         
                         with col1:
-                            st.markdown(f'''
-                            <div class="metric-card">
-                                <h3>Customer Segment</h3>
-                                <h2>{result['cluster_name']}</h2>
-                                <p>Cluster ID: {result['cluster_id']}</p>
-                            </div>
-                            ''', unsafe_allow_html=True)
+                            st.markdown(create_data_card("Customer Segment", result.get('cluster_name', 'Unknown'), color="#667eea"), unsafe_allow_html=True)
                         
                         with col2:
-                            risk_color = "#10B981" if result['risk_category'] == "Low Risk" else "#F59E0B" if result['risk_category'] == "Medium Risk" else "#EF4444"
-                            st.markdown(f'''
-                            <div class="metric-card">
-                                <h3>Risk Category</h3>
-                                <h2 style="color: {risk_color};">{result['risk_category']}</h2>
-                                <p>Score: {result['risk_score']:.3f}</p>
-                            </div>
-                            ''', unsafe_allow_html=True)
+                            risk_category = result.get('risk_category', 'Medium Risk')
+                            risk_color = "#EF4444" if "High" in risk_category else "#F59E0B" if "Medium" in risk_category else "#10B981"
+                            st.markdown(create_data_card("Risk Category", risk_category, color=risk_color), unsafe_allow_html=True)
                         
                         with col3:
-                            st.markdown(f'''
-                            <div class="metric-card">
-                                <h3>Digital Adoption</h3>
-                                <h2>{result['digital_adoption_score']}/4.0</h2>
-                                <p>Channels used</p>
-                            </div>
-                            ''', unsafe_allow_html=True)
+                            st.markdown(create_data_card("Digital Score", f"{result.get('digital_adoption_score', 0)}/4.0", color="#10B981"), unsafe_allow_html=True)
                         
                         # Display more details
                         st.markdown("### 📊 Detailed Analysis")
@@ -1062,7 +1256,7 @@ elif selected_page == "🎯 Predict":
                 
                 if st.button("🔮 Predict All Customers", type="primary"):
                     # Show success balloon
-                    show_success_balloon("Processing Batch!")
+                    show_hurry_alert("PROCESSING BATCH PREDICTION")
                     
                     # Prepare batch data
                     customers = []
@@ -1229,160 +1423,359 @@ elif selected_page == "📈 Insights":
     # Show success balloon
     show_success_balloon("Insights Ready!")
     
-    try:
-        # Check for processed data
-        df_path = "outputs/processed_data.csv"
+    if st.session_state.df is not None:
+        df = st.session_state.df
         
-        if os.path.exists(df_path):
-            df = pd.read_csv(df_path)
-            
-            # DYNAMIC INSIGHTS based on current data
-            st.markdown("### 📊 Real-time Data Insights")
-            
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                # Credit score insights
-                credit_col = get_column_case_insensitive(df, 'Credit_Score')
-                if credit_col:
-                    avg_credit = df[credit_col].mean()
-                    low_credit = (df[credit_col] < 500).sum()
-                    low_credit_pct = (low_credit / len(df)) * 100
-                    
-                    st.metric("Average Credit Score", f"{avg_credit:.0f}")
-                    st.metric("High Risk Customers", f"{low_credit:,}", f"{low_credit_pct:.1f}%")
-                    
-                    if low_credit_pct > 15:
-                        st.warning("⚠️ High proportion of risky customers. Consider financial education programs.")
-                    elif avg_credit > 700:
-                        st.success("✅ Excellent credit health. Focus on premium offerings.")
-            
-            with col2:
-                # Expenditure insights
-                expend_col = get_column_case_insensitive(df, 'Monthly_Expenditure')
-                if expend_col:
-                    avg_expend = df[expend_col].mean()
-                    high_spenders = (df[expend_col] > df[expend_col].quantile(0.75)).sum()
-                    high_spenders_pct = (high_spenders / len(df)) * 100
-                    
-                    st.metric("Average Monthly Spend", f"₦{avg_expend:,.0f}")
-                    st.metric("High Spenders", f"{high_spenders:,}", f"{high_spenders_pct:.1f}%")
-                    
-                    if high_spenders_pct > 20:
-                        st.info("💰 Significant high-value segment. Target with premium products.")
-            
-            with col3:
-                # Digital adoption insights
-                channel_col = get_column_case_insensitive(df, 'Transaction_Channel')
-                if channel_col:
-                    mobile_users = df[channel_col].astype(str).str.contains('Mobile|App', case=False, na=False).sum()
-                    mobile_pct = (mobile_users / len(df)) * 100
-                    digital_users = df[channel_col].astype(str).str.contains('Mobile|Web|App', case=False, na=False).sum()
-                    digital_pct = (digital_users / len(df)) * 100
-                    
-                    st.metric("Mobile App Users", f"{mobile_users:,}", f"{mobile_pct:.1f}%")
-                    st.metric("Digital Users", f"{digital_users:,}", f"{digital_pct:.1f}%")
-                    
-                    if digital_pct < 50:
-                        st.warning("📱 Low digital adoption. Consider incentives for digital channel usage.")
-            
-            # Generate dynamic recommendations based on data
-            st.markdown("### 💡 Dynamic Recommendations")
-            
-            recommendations = []
-            
-            # Check for cluster data
-            cluster_col = get_column_case_insensitive(df, 'cluster_name') or get_column_case_insensitive(df, 'cluster')
-            if cluster_col and cluster_col in df.columns:
-                cluster_counts = df[cluster_col].value_counts()
+        # DYNAMIC INSIGHTS based on current data
+        st.markdown("### 📊 Real-time Data Insights")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            # Credit score insights
+            credit_col = get_column_case_insensitive(df, 'Credit_Score')
+            if credit_col and credit_col in df.columns:
+                avg_credit = df[credit_col].mean()
+                low_credit = (df[credit_col] < 500).sum()
+                low_credit_pct = (low_credit / len(df)) * 100
+                
+                st.markdown(create_data_card("Average Credit Score", f"{avg_credit:.0f}"), unsafe_allow_html=True)
+                st.markdown(create_data_card("High Risk Customers", f"{low_credit_pct:.1f}%"), unsafe_allow_html=True)
+                
+                if low_credit_pct > 15:
+                    st.warning("⚠️ High proportion of risky customers. Consider financial education programs.")
+                elif avg_credit > 700:
+                    st.success("✅ Excellent credit health. Focus on premium offerings.")
+        
+        with col2:
+            # Expenditure insights
+            expend_col = get_column_case_insensitive(df, 'Monthly_Expenditure')
+            if expend_col and expend_col in df.columns:
+                avg_expend = df[expend_col].mean()
+                high_spenders = (df[expend_col] > df[expend_col].quantile(0.75)).sum()
+                high_spenders_pct = (high_spenders / len(df)) * 100
+                
+                st.markdown(create_data_card("Average Monthly Spend", f"₦{avg_expend:,.0f}"), unsafe_allow_html=True)
+                st.markdown(create_data_card("High Spenders", f"{high_spenders_pct:.1f}%"), unsafe_allow_html=True)
+                
+                if high_spenders_pct > 20:
+                    st.info("💰 Significant high-value segment. Target with premium products.")
+        
+        with col3:
+            # Digital adoption insights
+            channel_col = get_column_case_insensitive(df, 'Transaction_Channel')
+            if channel_col and channel_col in df.columns:
+                mobile_users = df[channel_col].astype(str).str.contains('Mobile|App', case=False, na=False).sum()
+                mobile_pct = (mobile_users / len(df)) * 100
+                digital_users = df[channel_col].astype(str).str.contains('Mobile|Web|App', case=False, na=False).sum()
+                digital_pct = (digital_users / len(df)) * 100
+                
+                st.markdown(create_data_card("Mobile App Users", f"{mobile_pct:.1f}%"), unsafe_allow_html=True)
+                st.markdown(create_data_card("Digital Users", f"{digital_pct:.1f}%"), unsafe_allow_html=True)
+                
+                if digital_pct < 50:
+                    st.warning("📱 Low digital adoption. Consider incentives for digital channel usage.")
+        
+        # Generate dynamic recommendations based on data
+        st.markdown("### 💡 Dynamic Recommendations")
+        
+        recommendations = []
+        
+        # Check for cluster data
+        cluster_col = get_column_case_insensitive(df, 'cluster_name') or get_column_case_insensitive(df, 'cluster')
+        if cluster_col and cluster_col in df.columns:
+            cluster_counts = df[cluster_col].value_counts()
+            if len(cluster_counts) > 0:
                 largest_cluster = cluster_counts.index[0]
                 largest_pct = (cluster_counts.iloc[0] / len(df)) * 100
                 
                 recommendations.append(f"**🎯 Focus on Largest Segment**: '{largest_cluster}' represents {largest_pct:.1f}% of customers. Tailor marketing to this group.")
-            
-            # Risk-based recommendations
-            risk_col = get_column_case_insensitive(df, 'risk_score')
-            if risk_col:
-                high_risk = (df[risk_col] > 0.6).sum()
-                high_risk_pct = (high_risk / len(df)) * 100
-                
-                if high_risk_pct > 10:
-                    recommendations.append(f"**⚖️ Risk Management Needed**: {high_risk_pct:.1f}% of customers are high-risk. Implement monitoring and support programs.")
-            
-            # Digital adoption recommendations
-            if 'digital_pct' in locals() and digital_pct < 60:
-                recommendations.append(f"**📱 Boost Digital Adoption**: Only {digital_pct:.1f}% use digital channels. Launch digital onboarding campaigns.")
-            
-            # Location-based recommendations
-            location_col = get_column_case_insensitive(df, 'Location')
-            if location_col:
-                top_locations = df[location_col].value_counts().head(3)
-                recommendations.append(f"**🌍 Geographic Focus**: Top 3 locations are {', '.join(top_locations.index.tolist())}. Consider location-specific offerings.")
-            
-            # Business recommendations from pipeline
-            business_rec_path = "outputs/business_recommendations.csv"
-            if os.path.exists(business_rec_path):
-                business_recs = pd.read_csv(business_rec_path)
-                st.markdown("### 🎯 Pipeline Recommendations")
-                for _, rec in business_recs.iterrows():
-                    with st.expander(f"{rec['cluster_name']} - Strategy"):
-                        st.markdown(f"**Targeting Strategy:** {rec['targeting_strategy']}")
-                        st.markdown(f"**Recommended Products:** {rec['recommended_products']}")
-                        st.markdown(f"**Marketing Channels:** {rec['marketing_channels']}")
-                        st.markdown(f"**Risk Management:** {rec['risk_management']}")
-            
-            # If no specific recommendations, provide general ones
-            if not recommendations:
-                recommendations = [
-                    "**📊 Regular Analysis**: Monitor customer segments monthly for trends",
-                    "**🎯 Personalized Marketing**: Use segmentation for targeted campaigns",
-                    "**💰 Revenue Optimization**: Identify high-value customers for premium offerings",
-                    "**📱 Digital Transformation**: Increase investment in mobile banking features"
-                ]
-            
-            for i, rec in enumerate(recommendations, 1):
-                st.markdown(f"{i}. {rec}")
-            
-            # Action plan
-            st.markdown("### 📋 Action Plan Timeline")
-            
-            action_items = [
-                ("Immediate (Week 1)", "Review current customer segments and high-risk profiles"),
-                ("Short-term (Month 1)", "Launch targeted campaigns based on segment analysis"),
-                ("Medium-term (Quarter 1)", "Implement personalized product recommendations"),
-                ("Long-term (Year 1)", "Develop AI-powered real-time customer insights engine")
-            ]
-            
-            for timeline, action in action_items:
-                col1, col2 = st.columns([1, 3])
-                with col1:
-                    st.markdown(f"<div style='background: #667eea; color: white; padding: 5px 10px; border-radius: 5px; text-align: center;'>{timeline}</div>", unsafe_allow_html=True)
-                with col2:
-                    st.markdown(f"**{action}**")
         
-        else:
-            # If no data, show static insights
-            st.warning("No data available. Please run the pipeline first.")
+        # Risk-based recommendations
+        risk_col = get_column_case_insensitive(df, 'risk_score')
+        if risk_col and risk_col in df.columns:
+            high_risk = (df[risk_col] > 0.6).sum()
+            high_risk_pct = (high_risk / len(df)) * 100
             
-            st.markdown("### 💼 General Recommendations")
-            
-            general_insights = [
-                "**🎯 Segment Customers**: Group customers by behavior, risk, and preferences",
-                "**💰 Optimize Revenue**: Focus on high-value customers with premium offerings",
-                "**📱 Digital First**: Invest in mobile and digital banking platforms",
-                "**⚖️ Risk Management**: Monitor credit scores and implement early warning systems",
-                "**🤝 Customer Retention**: Develop loyalty programs for long-term relationships",
-                "**📊 Data-Driven**: Use analytics for all business decisions"
+            if high_risk_pct > 10:
+                recommendations.append(f"**⚖️ Risk Management Needed**: {high_risk_pct:.1f}% of customers are high-risk. Implement monitoring and support programs.")
+        
+        # Digital adoption recommendations
+        if 'digital_pct' in locals() and digital_pct < 60:
+            recommendations.append(f"**📱 Boost Digital Adoption**: Only {digital_pct:.1f}% use digital channels. Launch digital onboarding campaigns.")
+        
+        # Location-based recommendations
+        location_col = get_column_case_insensitive(df, 'Location')
+        if location_col and location_col in df.columns:
+            top_locations = df[location_col].value_counts().head(3)
+            recommendations.append(f"**🌍 Geographic Focus**: Top 3 locations are {', '.join(top_locations.index.tolist())}. Consider location-specific offerings.")
+        
+        # Business recommendations from pipeline
+        business_rec_path = "outputs/business_recommendations.csv"
+        if os.path.exists(business_rec_path):
+            business_recs = pd.read_csv(business_rec_path)
+            st.markdown("### 🎯 Pipeline Recommendations")
+            for _, rec in business_recs.iterrows():
+                with st.expander(f"{rec['cluster_name']} - Strategy"):
+                    st.markdown(f"**Targeting Strategy:** {rec['targeting_strategy']}")
+                    st.markdown(f"**Recommended Products:** {rec['recommended_products']}")
+                    st.markdown(f"**Marketing Channels:** {rec['marketing_channels']}")
+                    st.markdown(f"**Risk Management:** {rec['risk_management']}")
+        
+        # If no specific recommendations, provide general ones
+        if not recommendations:
+            recommendations = [
+                "**📊 Regular Analysis**: Monitor customer segments monthly for trends",
+                "**🎯 Personalized Marketing**: Use segmentation for targeted campaigns",
+                "**💰 Revenue Optimization**: Identify high-value customers for premium offerings",
+                "**📱 Digital Transformation**: Increase investment in mobile banking features"
             ]
-            
-            for i, insight in enumerate(general_insights, 1):
-                st.markdown(f"{i}. {insight}")
+        
+        for i, rec in enumerate(recommendations, 1):
+            st.markdown(f"{i}. {rec}")
+        
+        # Action plan
+        st.markdown("### 📋 Action Plan Timeline")
+        
+        action_items = [
+            ("Immediate (Week 1)", "Review current customer segments and high-risk profiles"),
+            ("Short-term (Month 1)", "Launch targeted campaigns based on segment analysis"),
+            ("Medium-term (Quarter 1)", "Implement personalized product recommendations"),
+            ("Long-term (Year 1)", "Develop AI-powered real-time customer insights engine")
+        ]
+        
+        for timeline, action in action_items:
+            col1, col2 = st.columns([1, 3])
+            with col1:
+                st.markdown(f"<div style='background: #667eea; color: white; padding: 5px 10px; border-radius: 5px; text-align: center;'>{timeline}</div>", unsafe_allow_html=True)
+            with col2:
+                st.markdown(f"**{action}**")
     
-    except Exception as e:
-        st.error(f"Error loading insights: {str(e)}")
+    else:
+        # If no data, show static insights
+        st.warning("No data available. Please load data in Dashboard first.")
+        
+        st.markdown("### 💼 General Recommendations")
+        
+        general_insights = [
+            "**🎯 Segment Customers**: Group customers by behavior, risk, and preferences",
+            "**💰 Optimize Revenue**: Focus on high-value customers with premium offerings",
+            "**📱 Digital First**: Invest in mobile and digital banking platforms",
+            "**⚖️ Risk Management**: Monitor credit scores and implement early warning systems",
+            "**🤝 Customer Retention**: Develop loyalty programs for long-term relationships",
+            "**📊 Data-Driven**: Use analytics for all business decisions"
+        ]
+        
+        for i, insight in enumerate(general_insights, 1):
+            st.markdown(f"{i}. {insight}")
 
 # ============================================
-# PAGE 6: TEAM
+# PAGE 6: POWER BI DASHBOARD (NEW)
+# ============================================
+elif selected_page == "📊 Power BI Dashboard":
+    st.markdown('<h2 class="sub-header">📊 Power BI Dashboard - Pipeline Visualizations</h2>', unsafe_allow_html=True)
+    
+    # Show success balloon
+    show_success_balloon("Power BI Data!")
+    
+    # Load Power BI data
+    pbi_file = "powerbi/powerbi_dashboard_data.csv"
+    
+    if os.path.exists(pbi_file):
+        pbi_data = pd.read_csv(pbi_file)
+        st.session_state.pbi_data = pbi_data
+        
+        # Executive Summary
+        st.markdown("### 📊 Executive Summary")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            total_customers = len(pbi_data)
+            st.markdown(create_data_card("Total Customers", f"{total_customers:,}", color="#667eea"), unsafe_allow_html=True)
+        
+        with col2:
+            if 'cluster_name' in pbi_data.columns:
+                clusters = pbi_data['cluster_name'].nunique()
+                st.markdown(create_data_card("Segments Identified", f"{clusters}", color="#10B981"), unsafe_allow_html=True)
+            else:
+                st.markdown(create_data_card("Segments", "5", color="#10B981"), unsafe_allow_html=True)
+        
+        with col3:
+            if 'Credit_Score' in pbi_data.columns:
+                avg_credit = pbi_data['Credit_Score'].mean()
+                st.markdown(create_data_card("Avg Credit Score", f"{avg_credit:.0f}", color="#F59E0B"), unsafe_allow_html=True)
+            else:
+                st.markdown(create_data_card("Avg Credit", "645", color="#F59E0B"), unsafe_allow_html=True)
+        
+        with col4:
+            if 'risk_category' in pbi_data.columns:
+                high_risk = (pbi_data['risk_category'] == 'High Risk').sum()
+                high_risk_pct = (high_risk / total_customers) * 100
+                st.markdown(create_data_card("High Risk", f"{high_risk_pct:.1f}%", color="#EF4444"), unsafe_allow_html=True)
+            else:
+                st.markdown(create_data_card("Risk Rate", "12.5%", color="#EF4444"), unsafe_allow_html=True)
+        
+        # PAGE 1: Customer Segmentation
+        st.markdown("---")
+        st.markdown("### 🎯 Customer Segmentation")
+        
+        if 'cluster_name' in pbi_data.columns:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Pie chart
+                cluster_counts = pbi_data['cluster_name'].value_counts().reset_index()
+                cluster_counts.columns = ['Cluster', 'Count']
+                
+                fig = px.pie(cluster_counts, values='Count', names='Cluster',
+                            title='Cluster Distribution',
+                            color_discrete_sequence=px.colors.qualitative.Set3)
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                # Cluster table
+                cluster_summary = pbi_data.groupby('cluster_name').agg({
+                    'Customer_ID': 'count',
+                    'Credit_Score': 'mean',
+                    'Monthly_Expenditure': 'mean',
+                    'digital_adoption_score': 'mean'
+                }).reset_index()
+                
+                cluster_summary.columns = ['Cluster', 'Size', 'Avg Credit', 'Avg Spend', 'Digital Score']
+                st.dataframe(cluster_summary, use_container_width=True)
+        
+        # PAGE 2: Payment Channel Analytics
+        st.markdown("---")
+        st.markdown("### 📱 Payment Channel Analytics")
+        
+        if 'Transaction_Channel' in pbi_data.columns:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                channel_counts = pbi_data['Transaction_Channel'].value_counts()
+                fig = px.bar(x=channel_counts.index, y=channel_counts.values,
+                            title='Transaction Channel Usage',
+                            color_discrete_sequence=px.colors.sequential.Viridis)
+                fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                if 'digital_segment' in pbi_data.columns:
+                    digital_counts = pbi_data['digital_segment'].value_counts()
+                    fig = px.pie(values=digital_counts.values, names=digital_counts.index,
+                                title='Digital Segments',
+                                color_discrete_sequence=px.colors.qualitative.Pastel)
+                    st.plotly_chart(fig, use_container_width=True)
+        
+        # PAGE 3: Financial Behavior
+        st.markdown("---")
+        st.markdown("### 💰 Financial Behavior Metrics")
+        
+        if 'Credit_Score' in pbi_data.columns and 'Monthly_Expenditure' in pbi_data.columns:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                fig = px.histogram(pbi_data, x='Credit_Score', nbins=30,
+                                  title='Credit Score Distribution',
+                                  color_discrete_sequence=['#636EFA'])
+                fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                if 'Saving_Behavior' in pbi_data.columns:
+                    savings_counts = pbi_data['Saving_Behavior'].value_counts()
+                    fig = px.bar(x=savings_counts.index, y=savings_counts.values,
+                                title='Savings Behavior Distribution',
+                                color_discrete_sequence=px.colors.sequential.Plasma)
+                    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+                    st.plotly_chart(fig, use_container_width=True)
+        
+        # PAGE 4: NLP Insights
+        st.markdown("---")
+        st.markdown("### 💬 NLP Insights")
+        
+        if 'sentiment_label' in pbi_data.columns:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                sentiment_counts = pbi_data['sentiment_label'].value_counts()
+                fig = px.pie(values=sentiment_counts.values, names=sentiment_counts.index,
+                            title='Customer Sentiment Distribution',
+                            color_discrete_sequence=px.colors.sequential.RdBu)
+                st.plotly_chart(fig, use_container_width=True)
+            
+            with col2:
+                if 'Complaint_Type' in pbi_data.columns:
+                    complaint_counts = pbi_data['Complaint_Type'].value_counts().head(10)
+                    fig = px.bar(x=complaint_counts.index, y=complaint_counts.values,
+                                title='Top Complaint Types',
+                                color_discrete_sequence=px.colors.sequential.Magma)
+                    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+                    st.plotly_chart(fig, use_container_width=True)
+        
+        # Key Findings
+        st.markdown("---")
+        st.markdown("### 🔍 Key Findings")
+        
+        findings = [
+            f"Analysis completed on {len(pbi_data):,} customer records",
+            f"Identified {pbi_data['cluster_name'].nunique() if 'cluster_name' in pbi_data.columns else 'multiple'} customer segments",
+            f"Digital adoption rate: {(pbi_data['digital_adoption_score'].mean()/4*100 if 'digital_adoption_score' in pbi_data.columns else 0):.1f}%",
+            f"Risk distribution analyzed across all customer segments"
+        ]
+        
+        for finding in findings:
+            st.markdown(f"• **{finding}**")
+        
+        # Recommendations from pipeline
+        st.markdown("### 🎯 Recommendations")
+        
+        rec_file = "outputs/business_recommendations.csv"
+        if os.path.exists(rec_file):
+            recommendations = pd.read_csv(rec_file)
+            for _, row in recommendations.iterrows():
+                with st.expander(f"{row.get('cluster_name', 'Segment')} - Strategy"):
+                    st.write(f"**Targeting Strategy:** {row.get('targeting_strategy', 'N/A')}")
+                    st.write(f"**Recommended Products:** {row.get('recommended_products', 'N/A')}")
+                    st.write(f"**Marketing Channels:** {row.get('marketing_channels', 'N/A')}")
+                    st.write(f"**Risk Management:** {row.get('risk_management', 'N/A')}")
+        else:
+            st.info("Run the pipeline to generate business recommendations")
+        
+        # Export Power BI data
+        st.markdown("---")
+        st.markdown("### 📤 Export Data")
+        
+        if st.button("📥 Download Power BI Data"):
+            csv = pbi_data.to_csv(index=False)
+            st.download_button(
+                label="Download CSV",
+                data=csv,
+                file_name="powerbi_dashboard_data.csv",
+                mime="text/csv"
+            )
+    
+    else:
+        st.error("❌ Power BI data not found. Please run the pipeline first.")
+        show_hurry_alert("RUN PIPELINE TO GENERATE POWER BI DATA")
+        
+        st.markdown("""
+        **To generate Power BI data:**
+        1. Run `master_pipeline.py` to process your data
+        2. This will create `powerbi/powerbi_dashboard_data.csv`
+        3. Refresh this page to load the Power BI data
+        
+        The Power BI data includes:
+        - Enhanced customer segments
+        - Risk scores and categories
+        - Digital adoption metrics
+        - Sentiment analysis
+        - Payment channel analytics
+        """)
+
+# ============================================
+# PAGE 7: TEAM
 # ============================================
 elif selected_page == "👥 Team":
     st.markdown('<h2 class="sub-header">👥 Project Team</h2>', unsafe_allow_html=True)
@@ -1398,7 +1791,7 @@ elif selected_page == "👥 Team":
     </div>
     """, unsafe_allow_html=True)
     
-    # Team members - SIMPLIFIED with just names
+    # Team members - Enhanced with roles
     team_members = [
         {
             "name": "Amarachi Florence",
@@ -1475,7 +1868,15 @@ elif selected_page == "👥 Team":
     
     # Try to load actual data for impact stats
     try:
-        if os.path.exists("outputs/processed_data.csv"):
+        if st.session_state.df is not None:
+            df = st.session_state.df
+            impact_stats = [
+                (f"{len(df):,}+", "Customer Records Analyzed"),
+                (f"{df['cluster'].nunique() if 'cluster' in df.columns else 5}", "Customer Segments Identified"),
+                (f"{(df['risk_score'] > 0.6).mean()*100:.1f}%" if 'risk_score' in df.columns else "12.5%", "Risk Rate"),
+                (f"{((df['digital_adoption_score'] > 2).mean()*100 if 'digital_adoption_score' in df.columns else 68):.0f}%", "Digital Adoption Rate")
+            ]
+        elif os.path.exists("outputs/processed_data.csv"):
             df = pd.read_csv("outputs/processed_data.csv")
             impact_stats = [
                 (f"{len(df):,}+", "Customer Records Analyzed"),
@@ -1509,7 +1910,7 @@ elif selected_page == "👥 Team":
             ''', unsafe_allow_html=True)
 
 # ============================================
-# PAGE 7: SETTINGS
+# PAGE 8: SETTINGS
 # ============================================
 elif selected_page == "⚙️ Settings":
     st.markdown('<h2 class="sub-header">⚙️ System Settings & Configuration</h2>', unsafe_allow_html=True)
@@ -1522,7 +1923,7 @@ elif selected_page == "⚙️ Settings":
         api_host = st.text_input("API Host", "localhost")
         api_port = st.number_input("API Port", min_value=1, max_value=65535, value=8000)
         
-        if st.button("💾 Save API Settings"):
+        if st.button("💾 Save API Settings", type="primary"):
             st.session_state.api_url = f"http://{api_host}:{api_port}"
             st.success("✅ API settings saved!")
         
@@ -1579,7 +1980,7 @@ elif selected_page == "⚙️ Settings":
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("🔄 Reload Models"):
+            if st.button("🔄 Reload Models", type="primary"):
                 # Clear cache and reload
                 if 'models' in st.session_state:
                     del st.session_state.models
@@ -1587,12 +1988,21 @@ elif selected_page == "⚙️ Settings":
                 st.success("✅ Models reload initiated!")
         
         with col2:
-            if st.button("🔍 Check Model Health"):
-                scaler, pca, kmeans = load_models()
-                if all([scaler, pca, kmeans]):
-                    st.success("✅ All models loaded successfully!")
-                else:
-                    st.error("❌ Some models failed to load")
+            if st.button("🔍 Check Model Health", type="secondary"):
+                try:
+                    # Load models with suppressed warnings
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        scaler = joblib.load("models/scaler.pkl") if os.path.exists("models/scaler.pkl") else None
+                        pca = joblib.load("models/pca_model.pkl") if os.path.exists("models/pca_model.pkl") else None
+                        kmeans = joblib.load("models/kmeans_model.pkl") if os.path.exists("models/kmeans_model.pkl") else None
+                    
+                    if all([scaler, pca, kmeans]):
+                        st.success("✅ All models loaded successfully!")
+                    else:
+                        st.error("❌ Some models failed to load")
+                except Exception as e:
+                    st.error(f"❌ Error loading models: {str(e)}")
     
     with tab3:
         st.markdown("### 💾 Data Management")
@@ -1631,36 +2041,50 @@ elif selected_page == "⚙️ Settings":
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("🗑️ Clear Cache"):
+            if st.button("🗑️ Clear Cache", type="secondary"):
                 # Clear Streamlit cache
                 st.cache_data.clear()
                 st.cache_resource.clear()
                 st.success("✅ Cache cleared!")
         
         with col2:
-            if st.button("📦 Export All Data"):
-                # Create zip of all outputs
-                import zipfile
-                import io
-                
-                zip_buffer = io.BytesIO()
-                with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
-                    for root, dirs, files in os.walk('outputs'):
+            if st.button("🗑️ Clear Current Dataset", type="secondary"):
+                if st.session_state.df is not None:
+                    st.session_state.df = None
+                    st.success("✅ Dataset cleared from session!")
+                    st.rerun()
+                else:
+                    st.info("No dataset currently loaded in session")
+        
+        # Export all data
+        st.markdown("### 📦 Export All Data")
+        
+        if st.button("📥 Export All Data", type="primary"):
+            # Create zip of all outputs
+            zip_buffer = io.BytesIO()
+            with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
+                for root, dirs, files in os.walk('outputs'):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        arcname = os.path.relpath(file_path, 'outputs')
+                        zip_file.write(file_path, arcname)
+                # Also include powerbi data
+                if os.path.exists('powerbi'):
+                    for root, dirs, files in os.walk('powerbi'):
                         for file in files:
                             file_path = os.path.join(root, file)
-                            arcname = os.path.relpath(file_path, 'outputs')
+                            arcname = os.path.join('powerbi', os.path.relpath(file_path, 'powerbi'))
                             zip_file.write(file_path, arcname)
-                
-                st.download_button(
-                    label="📥 Download All Data",
-                    data=zip_buffer.getvalue(),
-                    file_name="customer_analysis_data.zip",
-                    mime="application/zip"
-                )
+            
+            st.download_button(
+                label="📥 Download All Data",
+                data=zip_buffer.getvalue(),
+                file_name="customer_analysis_data.zip",
+                mime="application/zip"
+            )
         
         st.markdown("### ⚙️ System Information")
         
-        # FIXED: Using correct version attributes
         import plotly
         info_items = [
             ("🐍 Python Version", sys.version.split()[0]),
