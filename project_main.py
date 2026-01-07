@@ -53,78 +53,80 @@ print("="*100)
 def load_and_validate_dataset():
     """Load and validate the 5200+ record dataset"""
     try:
-        # Try to load your actual file
+        # ALWAYS load your actual file - NO FALLBACK
         if os.path.exists(DATA_PATH):
             df = pd.read_csv(DATA_PATH)
+            print(f"✅ REAL DATASET loaded: {len(df):,} records")
+            print(f"✅ Columns: {list(df.columns)}")
+            
+            # If file is small, warn but continue
+            if len(df) < 100:
+                print(f"⚠️ WARNING: Your financial_data.csv has only {len(df)} rows")
+                print("⚠️ Expected 5,200+ rows. Continue anyway? [Y/N]")
+                # Just continue with what we have
+                
+            return df
+            
         else:
-            # Fallback: Use the data from your code
-            print("📁 Creating dataset from provided structure...")
-            df = create_realistic_dataset(5200)
-        
-        # Validate dataset size
-        print(f"✅ Dataset loaded: {len(df):,} records × {len(df.columns)} columns")
-        print(f"✅ Column structure matches project brief")
-        
-        # Save for Power BI
-        df.to_csv(f"{OUTPUT_DIR}/raw_dataset.csv", index=False)
-        
-        return df
+            print(f"❌ ERROR: File {DATA_PATH} not found!")
+            print("Please put financial_data.csv in the project folder")
+            print("The file should have 5,200+ rows")
+            raise FileNotFoundError(f"{DATA_PATH} not found")
         
     except Exception as e:
         print(f"❌ Error loading dataset: {e}")
         raise
 
-def create_realistic_dataset(n_records=5200):
-    """Create realistic 5200-record dataset matching African financial context"""
-    np.random.seed(RANDOM_STATE)
+# def create_realistic_dataset(n_records=5200):
+#  """Create realistic 5200-record dataset matching African financial context"""
+#   np.random.seed(RANDOM_STATE)
     
-    data = {
-        'Transaction_ID': range(1, n_records + 1),
-        'Customer_ID': np.random.randint(10000, 50000, n_records),
-        'Monthly_Expenditure': np.clip(np.random.lognormal(11.5, 0.8, n_records), 20000, 500000),
-        'Income_Level': np.random.choice(['Low', 'Lower-Middle', 'Middle', 'Upper-Middle', 'High'], 
-                                        n_records, p=[0.25, 0.30, 0.25, 0.15, 0.05]),
-        'Spending_Category': np.random.choice(['Groceries', 'Rent', 'Utilities', 'Transport', 'Health', 
-                                             'Education', 'Entertainment', 'Online Shopping', 'Savings Deposit'],
-                                            n_records, p=[0.20, 0.15, 0.12, 0.10, 0.08, 0.10, 0.10, 0.10, 0.05]),
-        'Saving_Behavior': np.random.choice(['Poor', 'Average', 'Good'], n_records, p=[0.35, 0.45, 0.20]),
-        'Credit_Score': np.clip(np.random.normal(580, 100, n_records), 300, 850),
-        'Loan_Status': np.random.choice(['No Loan', 'Active Loan', 'Default Risk'], 
-                                       n_records, p=[0.60, 0.35, 0.05]),
-        'Loan_Amount': np.zeros(n_records),
-        'Customer_Feedback': np.random.choice([
-            'Charges are confusing and unclear',
-            'Loan process takes too long',
-            'Payment failed multiple times',
-            'The service is excellent',
-            'I need better support',
-            "I don't understand my loan deductions",
-            'Overall experience is great',
-            'Customer service is slow to respond',
-            'App keeps crashing during payments',
-            'The interface is confusing',
-            'Transaction was fast and smooth',
-            'Very satisfied with the platform'
-        ], n_records),
-        'Complaint_Type': np.random.choice(['None', 'Loan Issue', 'Technical Issue', 'Charges Issue', 'General Feedback'],
-                                         n_records, p=[0.30, 0.25, 0.20, 0.15, 0.10]),
-        'Transaction_Channel': np.random.choice(['USSD', 'Web', 'Mobile App', 'POS'], 
-                                               n_records, p=[0.40, 0.20, 0.25, 0.15]),
-        'Location': np.random.choice(['Lagos', 'Abuja', 'Kano', 'Ibadan', 'Port Harcourt', 
-                                    'Kaduna', 'Enugu', 'Accra', 'Nairobi', 'Kampala'],
-                                   n_records, p=[0.25, 0.15, 0.10, 0.10, 0.10, 0.10, 0.05, 0.05, 0.05, 0.05]),
-        'Time_Of_Day': np.random.choice(['Morning', 'Afternoon', 'Evening', 'Night'], 
-                                       n_records, p=[0.30, 0.25, 0.25, 0.20])
-    }
-    
+  #  data = {
+    #    'Transaction_ID': range(1, n_records + 1),
+    #    'Customer_ID': np.random.randint(10000, 50000, n_records),
+    #    'Monthly_Expenditure': np.clip(np.random.lognormal(11.5, 0.8, n_records), 20000, 500000),
+      #   'Income_Level': np.random.choice(['Low', 'Lower-Middle', 'Middle', 'Upper-Middle', 'High'], 
+      #                                   n_records, p=[0.25, 0.30, 0.25, 0.15, 0.05]),
+     #   'Spending_Category': np.random.choice(['Groceries', 'Rent', 'Utilities', 'Transport', 'Health', 
+      #                                        'Education', 'Entertainment', 'Online Shopping', 'Savings Deposit'],
+      #                                       n_records, p=[0.20, 0.15, 0.12, 0.10, 0.08, 0.10, 0.10, 0.10, 0.05]),
+       #  'Saving_Behavior': np.random.choice(['Poor', 'Average', 'Good'], n_records, p=[0.35, 0.45, 0.20]),
+      #   'Credit_Score': np.clip(np.random.normal(580, 100, n_records), 300, 850),
+        #  'Loan_Status': np.random.choice(['No Loan', 'Active Loan', 'Default Risk'], 
+      #                                  n_records, p=[0.60, 0.35, 0.05]),
+      #   'Loan_Amount': np.zeros(n_records),
+#             'Charges are confusing and unclear',
+      #       'Loan process takes too long',
+      #       'Payment failed multiple times',
+      #       'The service is excellent',
+        #     'I need better support',
+      #       "I don't understand my loan deductions",
+       #      'Overall experience is great',
+       #      'Customer service is slow to respond',
+       #      'App keeps crashing during payments',
+       #      'The interface is confusing',
+       #      'Transaction was fast and smooth',
+       #      'Very satisfied with the platform'
+       #  ], n_records),
+       #  'Complaint_Type': np.random.choice(['None', 'Loan Issue', 'Technical Issue', 'Charges Issue', 'General Feedback'],
+       #                                   n_records, p=[0.30, 0.25, 0.20, 0.15, 0.10]),
+       #  'Transaction_Channel': np.random.choice(['USSD', 'Web', 'Mobile App', 'POS'], 
+       #                                         n_records, p=[0.40, 0.20, 0.25, 0.15]),
+       #  'Location': np.random.choice(['Lagos', 'Abuja', 'Kano', 'Ibadan', 'Port Harcourt', 
+       #                              'Kaduna', 'Enugu', 'Accra', 'Nairobi', 'Kampala'],
+       #                             n_records, p=[0.25, 0.15, 0.10, 0.10, 0.10, 0.10, 0.05, 0.05, 0.05, 0.05]),
+       #  'Time_Of_Day': np.random.choice(['Morning', 'Afternoon', 'Evening', 'Night'], 
+       #                                 n_records, p=[0.30, 0.25, 0.25, 0.20])
+    # 
+    # 
     # Add realistic loan amounts
-    mask_active = np.array(data['Loan_Status']) == 'Active Loan'
-    mask_default = np.array(data['Loan_Status']) == 'Default Risk'
+    #  mask_active = np.array(data['Loan_Status']) == 'Active Loan'
+    #  mask_default = np.array(data['Loan_Status']) == 'Default Risk'
     
-    data['Loan_Amount'][mask_active] = np.clip(np.random.lognormal(13, 0.5, mask_active.sum()), 50000, 3000000)
-    data['Loan_Amount'][mask_default] = np.clip(np.random.lognormal(13.5, 0.7, mask_default.sum()), 100000, 5000000)
+    # data['Loan_Amount'][mask_active] = np.clip(np.random.lognormal(13, 0.5, mask_active.sum()), 50000, 3000000)
+    #  data['Loan_Amount'][mask_default] = np.clip(np.random.lognormal(13.5, 0.7, mask_default.sum()), 100000, 5000000)
     
-    return pd.DataFrame(data)
+    #  return pd.DataFrame(data)
 
 # Load dataset
 df = load_and_validate_dataset()
