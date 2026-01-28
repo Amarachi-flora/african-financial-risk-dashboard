@@ -1,16 +1,28 @@
+# Core Application & Web Framework
 streamlit>=1.28.0
 fastapi>=0.104.0
 uvicorn>=0.24.0
+streamlit-lottie>=0.0.5
+
+# Data Processing & Mathematics
 pandas>=2.0.0
 numpy>=1.24.0
-plotly>=5.17.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
 scikit-learn>=1.3.0
 joblib>=1.3.0
+
+# Data Visualization
+plotly>=5.17.0
+plotly==5.24.1  # Explicitly pinned for stability
+kaleido==0.2.1  # Required by Plotly for static image export
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Natural Language Processing (NLP)
+vaderSentiment>=3.3.2  # ✅ Added: For advanced sentiment analysis
+
+# HTTP & API Handling
 requests>=2.31.0
+
+# Data Validation & Uploads
 pydantic>=2.0.0
-python-multipart>=0.0.6
-streamlit-lottie>=0.0.5
-plotly==5.24.1
-kaleido==0.2.1
+python-multipart>=0.0.6 
