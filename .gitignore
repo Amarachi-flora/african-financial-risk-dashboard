@@ -1,13 +1,51 @@
-# In VSCode Terminal
-cat > .gitignore << 'EOF'
-# Python
+# Python 
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
 venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
 
-# Generated files (don't push these)
-models/
+# Data and models
 outputs/
+models/
 charts/
 powerbi/
 eda_reports/
-EOF
+*.pkl
+*.pickle
+
+# Power BI and reports
+*.pbix
+*.pbip
+*.pdf
+*.pptx
+*.docx
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+*.log
+
+# OS
+*.log
+*.tmp
+*.temp
+
+# Large datasets (if any)
+large_dataset.csv
+*.zip
+*.tar.gz
