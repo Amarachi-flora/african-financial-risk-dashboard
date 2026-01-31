@@ -49,3 +49,9 @@ Thumbs.db
 large_dataset.csv
 *.zip
 *.tar.gz
+
+# Accidental files
+.py
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
