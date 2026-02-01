@@ -1,293 +1,206 @@
-# Customer Financial Risk Prediction Dashboard
+# 🌍 African Financial Customer Intelligence Platform  
+### Customer Financial Risk Prediction & Sentiment Analysis System
 
-## 📊 Project Overview
-
-A comprehensive machine learning pipeline and interactive dashboard for predicting customer financial risk in African markets. This project analyzes **5,200+ customer records** to provide actionable insights, customer segmentation, and risk predictions through an intuitive **Streamlit** interface.
-
----
-
-## 🎯 Key Features
-
-### 🔍 Data Analysis & ML Pipeline
-
-* **5,200+ Customer Records Analysis**: Comprehensive financial data processing
-* **Customer Segmentation**: Unsupervised clustering into distinct customer groups
-* **Risk Assessment**: Predictive modeling for financial risk scoring
-* **Sentiment Analysis**: NLP-powered analysis of customer feedback
-* **Feature Engineering**: Advanced feature creation for better predictions
-
-### 📊 Interactive Dashboard
-
-* **Real-time Predictions**: API-driven single and batch predictions
-* **Customer Analytics**: Deep filtering and segmentation analysis
-* **Visual Analytics**: Interactive charts and business intelligence
-* **Power BI Integration**: Ready-to-use data exports for BI dashboards
-* **Team Collaboration**: Project documentation and team information
+**Domain:** African Financial Markets Analytics  
+**Program:** [DataVerse Africa Internship Cohort 3.0](https://dataverseafrica.org/) — Data Analytics Track  
+**Duration:** 12 Weeks (Training + Project-Based)  
+**Team:** Amarachi Florence, Thato Maelane, Philip Odiachi, Mavis  
 
 ---
 
-## 🚀 Quick Start
+##  Project Overview
 
-### ✅ Prerequisites
+The **African Financial Customer Intelligence Platform** is an end-to-end analytics solution developed to help financial institutions in Africa better understand customer behavior, assess financial risk, and derive business insights that drive real operational improvements. The platform integrates machine learning, sentiment analysis, interactive web analytics, and executive reporting into a unified analytical ecosystem.
 
-* Python 3.8+
-* pip package manager
+The system was validated using **5,200+ real customer records**, but it was designed with adaptive intelligence so that users can upload **any financial dataset** and obtain structured analytics and actionable insights.
 
-### 📦 Installation
+---
 
-1. **Clone the repository**
+## 🌐 Live Platforms & Resources
 
-```bash
-git clone https://github.com/yourusername/customer-risk-dashboard.git
-cd customer-risk-dashboard
-```
+ **Streamlit Interactive App (Flexible Analytics):**  
+[https://african-financial-risk-dashboard-d.streamlit.app/](https://african-financial-risk-dashboard-d.streamlit.app/)
 
-2. **Install dependencies**
+ **Power BI Executive Dashboard Suite (Production Insights):**  
+[https://bit.ly/45za0YJ](https://bit.ly/45za0YJ)
+
+ **Project Report (PPT):**  
+[https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit](https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit)
+
+ **DataVerse Africa – Internship & Community:**  
+[https://dataverseafrica.org/](https://dataverseafrica.org/) — A community and training hub empowering African data professionals with project-based learning, mentorship, and real business problem solving.
+
+---
+
+##  Core Capabilities
+
+This platform provides:
+
+- Customer segmentation (automated clustering)  
+- Predictive risk scoring  
+- Sentiment analysis on customer feedback  
+- Digital channel adoption insights  
+- Interactive visualization dashboards  
+- Exportable analytic outputs  
+- Business recommendations tied to insights
+
+---
+
+##  How to Run Locally
 
 ```bash
 pip install -r requirements.txt
-```
+python -m streamlit run streamlit_app.py
+ 
 
-3. **Set up directories**
+📊 Power BI Executive Dashboard Suite
 
-```bash
-mkdir -p outputs models charts powerbi eda_reports api
-```
+Below are summaries and insights from the six executive dashboards built on the fixed 5,200-record dataset:
 
----
+🔹 Dashboard 1 — Customer Risk Overview
 
-## ▶️ Running the Application
+This dashboard gives a high-level view of the overall customer base, segmented by risk profiles and key financial indicators. A sizeable percentage of customers are classified as high risk, signaling areas where credit policies or engagement strategies could be improved.
 
-### 1️⃣ Start the ML Pipeline
+Business Insight:
+The high concentration of risk among certain segments suggests a need for tighter credit monitoring and customer education initiatives focused on financial health.
 
-```bash
-python project_main.py
-```
+Recommendations:
+Introduce tailored financial literacy programs and early warning systems that help customers manage credit and avoid defaults.
 
-Processes the data, trains models, and generates outputs.
+Dashboard Image:
 
-### 2️⃣ Start the API Server
 
-```bash
-python api/api_main.py
-```
+🔹 Dashboard 2 — Customer Segments Analysis
 
-### 3️⃣ Launch the Dashboard
+This dashboard explores customer segmentation and how these groups differ across demographic, geographic, and behavioral patterns. It highlights urban centers like Lagos and Abuja as hotspots for high-value behavior.
 
-```bash
-streamlit run streamlit_app.py
-```
+Business Insight:
+Customer behavior varies significantly across segments — some with high spending and digital transaction rates, others more traditional in engagement.
 
-### 🌐 Access Points
+Recommendations:
+Segment-driven strategies should focus on customizing product offerings and outreach tactics to match distinct group needs, especially in urban clusters.
 
-* **Dashboard**: [http://localhost:8501](http://localhost:8501)
-* **API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
+Dashboard Image:
 
----
 
-## 📁 Project Structure
+🔹 Dashboard 3 — Digital Transformation Insights
 
-```text
-customer-risk-dashboard/
-│
-├── streamlit_app.py
-├── project_main.py
-├── requirements.txt
-│
-├── api/
-│   └── api_main.py
-│
-├── outputs/
-│   ├── processed_data.csv
-│   ├── cluster_profiles.csv
-│   ├── business_recommendations.csv
-│   └── final_project_report.txt
-│
-├── models/
-│   ├── scaler.pkl
-│   ├── pca_model.pkl
-│   └── kmeans_model.pkl
-│
-├── charts/
-├── powerbi/
-├── eda_reports/
-│
-└── README.md
-```
+Focused on digital adoption, this dashboard tracks mobile app uptake, digital engagement metrics, and channel usage trends.
 
----
+Business Insight:
+A low digital adoption rate suggests that many customers still prefer traditional banking channels, limiting scalability and cost efficiency.
 
-## 🛠️ Technical Stack
+Recommendations:
+Offer incentives for customers to use digital platforms — such as in-app perks, easier navigation, and targeted promotions — to accelerate digital transformation.
 
-### 🔧 Backend
+Dashboard Image:
 
-* **Python**
-* **Scikit-learn**
-* **Pandas & NumPy**
-* **FastAPI**
-* **Joblib**
 
-### 🎨 Frontend
+🔹 Dashboard 4 — Financial Health Metrics
 
-* **Streamlit**
-* **Plotly**
-* **Matplotlib & Seaborn**
+This visualization describes the distribution of credit scores and the total value of the loan portfolio. It provides deep insight into lending performance and customer credit health.
 
-### 📐 Data Processing
+Business Insight:
+Many customers fall into ‘Poor’ or ‘Fair’ credit score categories, directly influencing risk levels and loan performance outcomes.
 
-* Feature Engineering
-* PCA (Dimensionality Reduction)
-* K-Means Clustering
-* NLP Sentiment Analysis
+Recommendations:
+Launch credit-improvement programs and tailored lending products that help customers progressively build better credit profiles.
 
----
+Dashboard Image:
 
-## 📈 Key Deliverables
 
-### 1️⃣ Customer Segmentation
+🔹 Dashboard 5 — Voice of Customer (Sentiment Analysis)
 
-* 6 distinct customer clusters
-* Detailed segment profiles
-* Targeted business strategies
+This dashboard analyzes customer feedback sentiment using VADER sentiment scoring and visualizes sentiment trends across feedback categories.
 
-### 2️⃣ Risk Prediction
+Business Insight:
+Negative sentiment is prevalent around service reliability and technical issues, indicating potential gaps in customer experience.
 
-* Real-time risk scoring
-* Low / Medium / High risk classification
-* Digital adoption analysis
+Recommendations:
+Deploy structured feedback response processes and invest in support training to resolve issues promptly, thereby improving sentiment and retention.
 
-### 3️⃣ Business Intelligence
+Dashboard Image:
 
-* Power BI–ready datasets
-* Actionable recommendations
-* Financial KPIs
 
-### 4️⃣ Interactive Dashboard
+🔹 Dashboard 6 — Prediction Risk Monitoring
 
-* 7 multi-page views
-* Real-time filtering
-* Exportable reports
+Here, the focus is on identifying individual customers with high default probability or risk signals, based on predictive models.
 
----
+Business Insight:
+Identifying at-risk customers ahead of time enables preemptive interventions that reduce losses and improve recovery prospects.
 
-## 🎨 Dashboard Pages
+Recommendations:
+Implement personalized outreach and risk mitigation packages for high-risk segments, supported by monitoring dashboards that update in near real-time.
 
-* 🏠 **Dashboard** – Executive summary
-* 🔍 **Customer Analysis** – Deep filtering
-* 📊 **Clusters** – Segment comparisons
-* 🎯 **Predict** – Risk prediction & API testing
-* 📈 **Insights** – Business recommendations
-* 👥 **Team** – Project contributors & [Dataverse Africa](https://dataverseafrica.org)
-* ⚙️ **Settings** – System configuration
+Dashboard Image:
 
----
 
-## 📊 Sample Outputs
+ Streamlit App – Features
 
-### Customer Segments
+The Streamlit application accepts any financial dataset and automatically:
 
-* Digital-First High Spenders – 22%
-* Traditional Low-Risk – 18%
-* High-Risk Low Spenders – 15%
-* Positive High Spenders – 20%
-* Medium Digital Medium Risk – 25%
+Detects key columns (metadata and types)
 
-### Key Metrics
+Performs intelligent cleaning and imputation
 
-* Total Customers: **5,200**
-* Avg Credit Score: **645**
-* Avg Monthly Spend: **₦150,000**
-* Digital Adoption: **68%**
-* High-Risk Customers: **12.5%**
+Runs segmentation & risk prediction
 
----
+Executes sentiment analysis on feedback text
 
-## 🔧 API Endpoints
+Generates interactive charts & summaries
 
-| Endpoint       | Method | Description       |
-| -------------- | ------ | ----------------- |
-| /health        | GET    | API health check  |
-| /predict       | POST   | Single prediction |
-| /predict/batch | POST   | Batch predictions |
-| /clusters      | GET    | Cluster info      |
-| /demo          | GET    | Demo prediction   |
+Produces downloadable reports
 
----
+Supported input formats:
 
-## 📋 Requirements
+CSV
 
-See `requirements.txt`. Key packages:
+Excel
 
-* streamlit==1.28.0
-* pandas==2.1.3
-* plotly==5.17.0
-* scikit-learn==1.3.2
-* fastapi==0.104.1
-* uvicorn==0.24.0
+This flexible analytical tool empowers users to upload their own real-world datasets and obtain actionable insights in minutes.
 
----
+🛠 Installation & Setup
 
-## 🤝 Team
+Prerequisites:
 
-**Dataverse Africa Internship Program**
+Python 3.8+
 
-* **Amarachi Florence** – Data Analyst & Project Lead
-* Thato Maelane – Machine Learning Engineer
-* Philip Odiachi – Data Engineer
-* Mavis – Business Analyst
+pip package manager
 
----
+Local Setup:
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+cd YOUR_REPO_NAME
+pip install -r requirements.txt
+python -m streamlit run streamlit_app.py
 
-## 🌍 About Dataverse Africa
+Testing:
 
-[Dataverse Africa](https://dataverseafrica.org) is empowering Africa’s digital future through:
+test_vader.py – VADER sentiment test
 
-* Training next-generation data scientists
-* Applied AI research for African markets
-* Industry collaboration
-* Data-driven solutions for real-world problems
+test_vscode.py – Environment sanity test
 
----
+ API Endpoints
+Endpoint	Method	Description
+/health	GET	System health check
+/predict	POST	Predict risk for a single customer
+/predict/batch	POST	Batch predictions
+/clusters	GET	Get cluster definitions
+/demo	GET	Demo prediction
 
-## 📈 Business Impact
+ Report & Presentation
 
-### For Financial Institutions
+Capstone Project Report:
+https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit
 
-* Improved risk assessment
-* Better customer segmentation
-* Digital channel optimization
-* Enhanced customer sentiment insights
+🎓 Acknowledgments
 
-### For Customers
+This work was completed as part of the DataVerse Africa Internship Program. Special thanks to the mentors, program partners, and the open-source community.
 
-* Personalized financial products
-* Improved risk management
-* Better digital banking experience
+Learn more at:
 
----
+🌐 DataVerse Africa
 
-## 🚀 Getting Started with Your Data
 
-1. Prepare your dataset
-2. Run `python project_main.py`
-3. Explore insights via Streamlit
-4. Apply business recommendations
+ License
 
----
-
-## 📄 License
-
-Developed as part of the **Dataverse Africa Internship Program**. All rights reserved.
-
----
-
-## 🔗 Links
-
-* **Live Streamlit Dashboard**: [African Financial Risk Dashboard](https://african-financial-risk-dashboard-d.streamlit.app/)
-* **Local Dashboard**: [http://localhost:8501](http://localhost:8501)
-* **API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-* **Dataverse Africa**: [https://dataverseafrica.org](https://dataverseafrica.org)
-
----
-
-**Built with ❤️ for African Financial Markets — Empowering Data-Driven Decisions**
+Licensed under the MIT License. See the LICENSE file for details.

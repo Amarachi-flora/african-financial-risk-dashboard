@@ -23,8 +23,7 @@ eda_reports/
 # Power BI and reports
 *.pbix
 *.pbip
-*.pdf
-*.pptx
+*.pdf 
 *.docx
 
 # IDE
