@@ -1,206 +1,207 @@
-# 🌍 African Financial Customer Intelligence Platform  
+# 🌍 African Financial Customer Intelligence Platform
+
 ### Customer Financial Risk Prediction & Sentiment Analysis System
 
-**Domain:** African Financial Markets Analytics  
-**Program:** [DataVerse Africa Internship Cohort 3.0](https://dataverseafrica.org/) — Data Analytics Track  
-**Duration:** 12 Weeks (Training + Project-Based)  
-**Team:** Amarachi Florence, Thato Maelane, Philip Odiachi, Mavis  
+**Domain:** African Financial Markets Analytics
+**Program:** [DataVerse Africa Internship Cohort 3.0](https://dataverseafrica.org/) — Data Analytics Track
+**Duration:** 12 Weeks (Training + Project-Based)
+**Team:** Amarachi Florence, Thato Maelane, Philip Odiachi, Mavis
+
 
 ---
 
 ##  Project Overview
 
-The **African Financial Customer Intelligence Platform** is an end-to-end analytics solution developed to help financial institutions in Africa better understand customer behavior, assess financial risk, and derive business insights that drive real operational improvements. The platform integrates machine learning, sentiment analysis, interactive web analytics, and executive reporting into a unified analytical ecosystem.
+The **African Financial Customer Intelligence Platform** is an end-to-end analytics solution developed to help financial institutions in Africa better understand customer behavior, assess financial risk, and derive insights that drive real operational improvements. The platform combines machine learning, sentiment analysis, interactive web analytics, and executive reporting into one unified analytics ecosystem.
 
-The system was validated using **5,200+ real customer records**, but it was designed with adaptive intelligence so that users can upload **any financial dataset** and obtain structured analytics and actionable insights.
+The system was validated using **5,200+ real customer records**, while also being engineered with adaptive intelligence that allows users to upload **any financial dataset** and automatically generate structured analytics and business-ready insights.
 
 ---
 
 ## 🌐 Live Platforms & Resources
 
- **Streamlit Interactive App (Flexible Analytics):**  
+ **Streamlit Interactive App (Flexible Analytics):**
 [https://african-financial-risk-dashboard-d.streamlit.app/](https://african-financial-risk-dashboard-d.streamlit.app/)
 
- **Power BI Executive Dashboard Suite (Production Insights):**  
+ **Power BI Executive Dashboard Suite (Production Insights):**
 [https://bit.ly/45za0YJ](https://bit.ly/45za0YJ)
 
- **Project Report (PPT):**  
+ **Project Report (Presentation):**
 [https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit](https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit)
 
- **DataVerse Africa – Internship & Community:**  
-[https://dataverseafrica.org/](https://dataverseafrica.org/) — A community and training hub empowering African data professionals with project-based learning, mentorship, and real business problem solving.
+🌐 **DataVerse Africa – Internship & Community:**
+[https://dataverseafrica.org/](https://dataverseafrica.org/)
 
 ---
 
 ##  Core Capabilities
 
-This platform provides:
-
-- Customer segmentation (automated clustering)  
-- Predictive risk scoring  
-- Sentiment analysis on customer feedback  
-- Digital channel adoption insights  
-- Interactive visualization dashboards  
-- Exportable analytic outputs  
-- Business recommendations tied to insights
+* Automated customer segmentation using clustering algorithms
+* Predictive financial risk scoring
+* Sentiment analysis on customer feedback using NLP
+* Digital channel adoption insights
+* Interactive visual analytics dashboards
+* Downloadable analytical outputs
+* Business recommendations directly tied to insights
 
 ---
 
-##  How to Run Locally
+## ⚙️ How to Run Locally
 
 ```bash
 pip install -r requirements.txt
 python -m streamlit run streamlit_app.py
- 
+```
 
-📊 Power BI Executive Dashboard Suite
+---
 
-Below are summaries and insights from the six executive dashboards built on the fixed 5,200-record dataset:
+# 📊 Power BI Executive Dashboard Suite
 
-🔹 Dashboard 1 — Customer Risk Overview
+Below are insights from the six executive dashboards built using the fixed 5,200-record dataset.
 
-This dashboard gives a high-level view of the overall customer base, segmented by risk profiles and key financial indicators. A sizeable percentage of customers are classified as high risk, signaling areas where credit policies or engagement strategies could be improved.
+---
 
-Business Insight:
-The high concentration of risk among certain segments suggests a need for tighter credit monitoring and customer education initiatives focused on financial health.
+## 🔹 Dashboard 1 — Customer Risk Overview
 
-Recommendations:
-Introduce tailored financial literacy programs and early warning systems that help customers manage credit and avoid defaults.
+![Dashboard 1](images/dashboard1.png)
 
-Dashboard Image:
+This dashboard provides a high-level view of the overall customer base, segmented by financial risk levels and key credit indicators. It highlights the distribution of customers across risk bands and reveals the concentration of higher-risk profiles within specific behavioral segments.
 
+**Key Findings:**
+A significant share of customers fall into elevated risk categories, indicating exposure within parts of the loan portfolio and a need for structured monitoring mechanisms.
 
-🔹 Dashboard 2 — Customer Segments Analysis
+**Business Insight:**
+Risk concentration suggests that proactive financial education and monitoring strategies are necessary to stabilize portfolio performance.
 
-This dashboard explores customer segmentation and how these groups differ across demographic, geographic, and behavioral patterns. It highlights urban centers like Lagos and Abuja as hotspots for high-value behavior.
+**Recommendations:**
+Introduce early warning systems, targeted financial literacy programs, and customized credit support plans for vulnerable customer segments.
 
-Business Insight:
-Customer behavior varies significantly across segments — some with high spending and digital transaction rates, others more traditional in engagement.
+---
 
-Recommendations:
-Segment-driven strategies should focus on customizing product offerings and outreach tactics to match distinct group needs, especially in urban clusters.
+## 🔹 Dashboard 2 — Customer Segments Analysis
 
-Dashboard Image:
+![Dashboard 2](images/dashboard2.png)
 
+This dashboard explores how customer segments differ across demographic, geographic, and behavioral characteristics. It highlights regional patterns and identifies urban centers as hubs of higher-value financial activity.
 
-🔹 Dashboard 3 — Digital Transformation Insights
+**Key Findings:**
+Spending behavior, product usage, and engagement levels vary widely across segments, with urban customers showing stronger transaction volumes and digital interaction.
 
-Focused on digital adoption, this dashboard tracks mobile app uptake, digital engagement metrics, and channel usage trends.
+**Business Insight:**
+Segment diversity presents opportunities for personalized product offerings and region-specific engagement strategies.
 
-Business Insight:
-A low digital adoption rate suggests that many customers still prefer traditional banking channels, limiting scalability and cost efficiency.
+**Recommendations:**
+Adopt segment-driven marketing, tailor financial products to lifestyle patterns, and focus growth strategies on high-value geographic clusters.
 
-Recommendations:
-Offer incentives for customers to use digital platforms — such as in-app perks, easier navigation, and targeted promotions — to accelerate digital transformation.
+---
 
-Dashboard Image:
+## 🔹 Dashboard 3 — Digital Transformation Insights
 
+![Dashboard 3](images/dashboard3.png)
 
-🔹 Dashboard 4 — Financial Health Metrics
+This dashboard tracks mobile application adoption, digital engagement levels, and transaction channel preferences among customers.
 
-This visualization describes the distribution of credit scores and the total value of the loan portfolio. It provides deep insight into lending performance and customer credit health.
+**Key Findings:**
+Digital adoption remains relatively low compared to traditional banking channels, indicating room for digital transformation.
 
-Business Insight:
-Many customers fall into ‘Poor’ or ‘Fair’ credit score categories, directly influencing risk levels and loan performance outcomes.
+**Business Insight:**
+Improving digital usage can reduce operational costs while enhancing customer convenience and scalability.
 
-Recommendations:
-Launch credit-improvement programs and tailored lending products that help customers progressively build better credit profiles.
+**Recommendations:**
+Launch digital onboarding campaigns, provide app usage incentives, and simplify digital interfaces to encourage adoption.
 
-Dashboard Image:
+---
 
+## 🔹 Dashboard 4 — Financial Health Metrics
 
-🔹 Dashboard 5 — Voice of Customer (Sentiment Analysis)
+![Dashboard 4](images/dashboard4.png)
 
-This dashboard analyzes customer feedback sentiment using VADER sentiment scoring and visualizes sentiment trends across feedback categories.
+This dashboard presents the distribution of credit scores and provides insight into the overall loan portfolio performance and customer financial stability.
 
-Business Insight:
-Negative sentiment is prevalent around service reliability and technical issues, indicating potential gaps in customer experience.
+**Key Findings:**
+A large proportion of customers fall within low-to-mid credit score ranges, directly influencing lending risk levels.
 
-Recommendations:
-Deploy structured feedback response processes and invest in support training to resolve issues promptly, thereby improving sentiment and retention.
+**Business Insight:**
+Customer financial health is closely tied to portfolio performance and long-term revenue sustainability.
 
-Dashboard Image:
+**Recommendations:**
+Develop credit-building programs, flexible repayment structures, and financial wellness education initiatives.
 
+---
 
-🔹 Dashboard 6 — Prediction Risk Monitoring
+## 🔹 Dashboard 5 — Voice of Customer (Sentiment Analysis)
 
-Here, the focus is on identifying individual customers with high default probability or risk signals, based on predictive models.
+![Dashboard 5](images/dashboard5.png)
 
-Business Insight:
-Identifying at-risk customers ahead of time enables preemptive interventions that reduce losses and improve recovery prospects.
+This dashboard visualizes customer feedback sentiment derived from NLP analysis and highlights key service-related themes.
 
-Recommendations:
-Implement personalized outreach and risk mitigation packages for high-risk segments, supported by monitoring dashboards that update in near real-time.
+**Key Findings:**
+Negative sentiment clusters around service reliability and technical experience issues.
 
-Dashboard Image:
+**Business Insight:**
+Customer experience challenges can directly affect retention and brand trust.
 
+**Recommendations:**
+Strengthen service support systems, implement structured complaint resolution workflows, and continuously monitor sentiment trends.
 
- Streamlit App – Features
+---
 
-The Streamlit application accepts any financial dataset and automatically:
+## 🔹 Dashboard 6 — Prediction Risk Monitoring
 
-Detects key columns (metadata and types)
+![Dashboard 6](images/dashboard6.png)
 
-Performs intelligent cleaning and imputation
+This dashboard focuses on identifying customers with elevated default probabilities using predictive analytics models.
 
-Runs segmentation & risk prediction
+**Key Findings:**
+A defined subset of customers exhibits strong risk signals requiring immediate attention.
 
-Executes sentiment analysis on feedback text
+**Business Insight:**
+Early identification enables preemptive interventions that minimize financial losses.
 
-Generates interactive charts & summaries
+**Recommendations:**
+Deploy proactive outreach programs and dynamic risk monitoring systems for high-risk customers.
 
-Produces downloadable reports
+---
 
-Supported input formats:
+## 📈 Streamlit App – Features
 
-CSV
+The Streamlit application allows users to upload their own datasets and automatically:
 
-Excel
+* Detect key columns and metadata
+* Clean and preprocess data intelligently
+* Run segmentation and risk prediction models
+* Perform sentiment analysis on feedback text
+* Generate interactive charts and summaries
+* Export analytical results
 
-This flexible analytical tool empowers users to upload their own real-world datasets and obtain actionable insights in minutes.
+Supported input formats: **CSV** and **Excel**.
 
-🛠 Installation & Setup
+---
 
-Prerequisites:
+## 🛠 Installation & Setup
 
-Python 3.8+
-
-pip package manager
-
-Local Setup:
+```bash
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 cd YOUR_REPO_NAME
 pip install -r requirements.txt
 python -m streamlit run streamlit_app.py
+```
 
-Testing:
+---
 
-test_vader.py – VADER sentiment test
+## 📝 Report & Presentation
 
-test_vscode.py – Environment sanity test
+Full Project Report:
+[https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit](https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit)
 
- API Endpoints
-Endpoint	Method	Description
-/health	GET	System health check
-/predict	POST	Predict risk for a single customer
-/predict/batch	POST	Batch predictions
-/clusters	GET	Get cluster definitions
-/demo	GET	Demo prediction
+---
 
- Report & Presentation
+## 🎓 Acknowledgments
 
-Capstone Project Report:
-https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit
+This project was completed under the **DataVerse Africa Internship Program**. Appreciation goes to mentors, program coordinators, and the data community supporting applied analytics across Africa.
 
-🎓 Acknowledgments
+---
 
-This work was completed as part of the DataVerse Africa Internship Program. Special thanks to the mentors, program partners, and the open-source community.
+## 📜 License
 
-Learn more at:
-
-🌐 DataVerse Africa
-
-
- License
-
-Licensed under the MIT License. See the LICENSE file for details.
+Licensed under the MIT License.
