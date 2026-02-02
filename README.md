@@ -46,7 +46,7 @@ The system was validated using **5,200+ real customer records**, while also bein
 
 ---
 
-## ⚙️ How to Run Locally
+##  How to Run Locally
 
 ```bash
 pip install -r requirements.txt
@@ -163,7 +163,7 @@ Deploy proactive outreach programs and dynamic risk monitoring systems for high-
 
 ---
 
-## 📈 Streamlit App – Features
+##  Streamlit App – Features
 
 The Streamlit application allows users to upload their own datasets and automatically:
 
@@ -178,7 +178,7 @@ Supported input formats: **CSV** and **Excel**.
 
 ---
 
-## 🛠 Installation & Setup
+##  Installation & Setup
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
@@ -189,19 +189,19 @@ python -m streamlit run streamlit_app.py
 
 ---
 
-## 📝 Report & Presentation
+##  Report & Presentation
 
 Full Project Report:
 [https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit](https://docs.google.com/presentation/d/1JN4UVYeWbU-VgZt-d_Dew5ne6vzgucit/edit)
 
 ---
 
-## 🎓 Acknowledgments
+##  Acknowledgments
 
 This project was completed under the **DataVerse Africa Internship Program**. Appreciation goes to mentors, program coordinators, and the data community supporting applied analytics across Africa.
 
 ---
 
-## 📜 License
+##  License
 
 Licensed under the MIT License.
